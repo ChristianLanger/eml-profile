@@ -17,6 +17,7 @@
       <xs:sequence>
         <xs:element ref="alternateIdentifier" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element ref="title" maxOccurs="unbounded"/>
+        <xs:element name="ebv" type="ebv" minOccurs="1" maxOccurs="unbounded"/>
         <!-- Original creator of the dataset/resource, not necessarily the agent authoring the eml file nor the primary contact -->
         <xs:element name="creator" type="agentType" maxOccurs="unbounded">
           <xs:annotation>
@@ -31,6 +32,8 @@
         </xs:element>
         <xs:element ref="associatedParty" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element ref="pubDate"/>
+        <xs:element ref="license"/>
+        <xs:element ref="citaction"/>
         <xs:element ref="language" minOccurs="0"/>
         <xs:element ref="abstract"/>
         <xs:element ref="keywordSet" minOccurs="0" maxOccurs="unbounded"/>
@@ -74,6 +77,75 @@
       <xs:enumeration value="otherMaintenancePeriod"/>
     </xs:restriction>
   </xs:simpleType>
+  
+  <xs:simpleType name="ebvName">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="Co-ancestry"/>
+        <xs:enumeration value="Allelic diversity"/>
+        <xs:enumeration value="Population genetic differentiation"/>
+        <xs:enumeration value="Breed and variety diversity"/>
+        <xs:enumeration value="Species distribution"/>
+        <xs:enumeration value="Population abundance"/>
+        <xs:enumeration value="Population structure by age/size class"/>
+        <xs:enumeration value="Phenology"/>
+        <xs:enumeration value="Morphology"/>
+        <xs:enumeration value="Reproduction"/>
+        <xs:enumeration value="Physiology"/>
+        <xs:enumeration value="Movement"/>
+        <xs:enumeration value="Taxonomic diversity"/>
+        <xs:enumeration value="Species interactions"/>
+        <xs:enumeration value="Net primary productivity"/>
+        <xs:enumeration value="Secondary productivity"/>
+        <xs:enumeration value="Nutrient retention"/>
+        <xs:enumeration value="Disturbance regime"/>
+        <xs:enumeration value="Habitat structure"/>
+        <xs:enumeration value="Ecosystem extent and fragmentation"/>
+        <xs:enumeration value="Ecosystem composition by functional type"/>    
+      </xs:restriction>
+    </xs:simpleType>
+      
+    <xs:simpleType name="ebvClass">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="Genetic composition"/>
+        <xs:enumeration value="Species populations"/>
+        <xs:enumeration value="Species traits"/>
+        <xs:enumeration value="Community composition"/>
+        <xs:enumeration value="Ecosystem function"/>
+        <xs:enumeration value="Ecosystem structure"/>
+      </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="license">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="CCO"/>
+        <xs:enumeration value="CC BY"/>
+        <xs:enumeration value="CC BY-NC"/>
+      </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="protocol">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="OGC:WFS"/>
+        <xs:enumeration value="OGC:WCS"/>
+      </xs:restriction>
+    </xs:simpleType>
+  
+  <xs:complexType name="ebv">
+    <xs:sequence>
+    	<xs:element name="class" type="ebvClass">
+          <xs:annotation>
+            <xs:documentation>The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      <xs:element name="name" type="ebvName">
+          <xs:annotation>
+            <xs:documentation>The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      
+    </xs:sequence>
+  </xs:complexType>
+  
   <xs:complexType name="agentType">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded" minOccurs="1">
@@ -113,6 +185,16 @@
   <xs:element name="pubDate" type="yearDate">
     <xs:annotation>
       <xs:documentation>The date on which the resource was published</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="license" type="license">
+    <xs:annotation>
+      <xs:documentation>License</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="citation" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>Citation</xs:documentation>
     </xs:annotation>
   </xs:element>
   <xs:element name="language" type="NonEmptyStringType">
@@ -218,6 +300,16 @@
                   <xs:documentation>The southBoundingCoordinate field defines the latitude of the southern-most point of the bounding box that is being described.</xs:documentation>
                 </xs:annotation>
               </xs:element>
+              <xs:element name="resolution" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>geographicResolution</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="uncertainty" type="xs:string">
+		        <xs:annotation>
+		          <xs:documentation>geographicUncertainty</xs:documentation>
+		        </xs:annotation>
+		      </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -230,6 +322,7 @@
       <xs:documentation>This field specifies temporal coverage, and allows coverages to be a single point in time, multiple points in time, or a range of dates. </xs:documentation>
     </xs:annotation>
     <xs:complexType>
+	  <xs:sequence>
       <xs:choice>
         <xs:element name="rangeOfDates">
           <xs:annotation>
@@ -256,6 +349,17 @@
           </xs:annotation>
         </xs:element>
       </xs:choice>
+      <xs:element name="resolution" type="xs:string">
+	        <xs:annotation>
+	          <xs:documentation>temporalResolution</xs:documentation>
+	        </xs:annotation>
+	      </xs:element>
+	      <xs:element name="uncertainty" type="xs:string">
+	        <xs:annotation>
+	          <xs:documentation>temporalUncertainty</xs:documentation>
+	        </xs:annotation>
+	      </xs:element>
+	  </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="taxonomicCoverage">
@@ -311,36 +415,22 @@
       <xs:documentation>The methods field documents scientific methods used in the collection of this dataset. It includes information on items such as tools, instrument calibration and software.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:sequence maxOccurs="unbounded">
-        <xs:element name="methodStep" type="description">
+      <xs:sequence>
+        <xs:element name="methodDescription" type="description" maxOccurs="unbounded">
           <xs:annotation>
             <xs:documentation>The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="sampling" minOccurs="0">
+        <xs:element name="datasetDependencies" type="xs:string" maxOccurs="unbounded">
           <xs:annotation>
-            <xs:documentation>Description of sampling procedures including the geographic, temporal and taxonomic coverage of the study.</xs:documentation>
+            <xs:documentation>The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken.</xs:documentation>
           </xs:annotation>
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="studyExtent" type="description">
-                <xs:annotation>
-                  <xs:documentation>The field studyExtent represents both a specific sampling area and the sampling frequency (temporal boundaries, frequency of occurrence). The geographic studyExtent is usually a surrogate (representative area of) for the larger area documented in the "studyAreaDescription". </xs:documentation>
-                </xs:annotation>
-              </xs:element>
-              <xs:element name="samplingDescription">
-                <xs:annotation>
-                  <xs:documentation>The samplingDescription field allows for a text-based/human readable description of the sampling procedures used in the research project. The content of this element would be similar to a description of sampling procedures found in the methods section of a journal article.</xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element ref="para"/>
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
         </xs:element>
+        <xs:element name="models" type="xs:string" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken.</xs:documentation>
+          </xs:annotation>
+        </xs:element>       
         <xs:element name="qualityControl" type="description" minOccurs="0" maxOccurs="unbounded">
           <xs:annotation>
             <xs:documentation>The qualityControl field provides a location for the description of actions taken to either control or assess the quality of data resulting from the associated method step. </xs:documentation>
@@ -435,7 +525,7 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="gbif">
+              <xs:element name="ebv">
                 <xs:annotation>
                   <xs:documentation>A block of additional metadata used for some special GBIF purposes and crossmapping to other schemas like the TDWG Natural Collection Data (NCD) schema</xs:documentation>
                 </xs:annotation>
@@ -1257,9 +1347,11 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="online"/>
+        <xs:element name="url" type="xs:anyURI"/>
+        <xs:element name="protocol" type="protocol"/>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="description" type="xs:string"/>
       </xs:sequence>
-      <xs:attribute name="scope" type="xs:string"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="online">
