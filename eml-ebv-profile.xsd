@@ -17,6 +17,7 @@
       <xs:sequence>
         <xs:element ref="alternateIdentifier" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element ref="title" maxOccurs="unbounded"/>
+        <!-- EBV of the dataset/resource -->
         <xs:element name="ebv" type="ebv" minOccurs="1" maxOccurs="unbounded"/>
         <!-- Original creator of the dataset/resource, not necessarily the agent authoring the eml file nor the primary contact -->
         <xs:element name="creator" type="agentType" maxOccurs="unbounded">
@@ -33,7 +34,7 @@
         <xs:element ref="associatedParty" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element ref="pubDate"/>
         <xs:element ref="license"/>
-        <xs:element ref="citaction"/>
+        <xs:element ref="citation"/>
         <xs:element ref="language" minOccurs="0"/>
         <xs:element ref="abstract"/>
         <xs:element ref="keywordSet" minOccurs="0" maxOccurs="unbounded"/>
@@ -59,7 +60,7 @@
   </xs:element>
   <xs:element name="alternateIdentifier" type="xs:string">
     <xs:annotation>
-      <xs:documentation>This is the only identifier issued by the IPT for the metadata document; it is a UUID</xs:documentation>
+      <xs:documentation>This is the only identifier issued by the EBV resource for the metadata document; it is a UUID</xs:documentation>
     </xs:annotation>
   </xs:element>
   <xs:simpleType name="MaintUpFreqType">
@@ -134,12 +135,12 @@
     <xs:sequence>
     	<xs:element name="class" type="ebvClass">
           <xs:annotation>
-            <xs:documentation>The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described.</xs:documentation>
+            <xs:documentation>A class name in the domain of the GEO BON List of Essential Biodiversity Variables.</xs:documentation>
           </xs:annotation>
         </xs:element>
       <xs:element name="name" type="ebvName">
           <xs:annotation>
-            <xs:documentation>The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described.</xs:documentation>
+            <xs:documentation>A name of the Essential Biodiversity Variable, preferably in the domain of the GEO BON List of Essential Biodiversity Variables.</xs:documentation>
           </xs:annotation>
         </xs:element>
       
@@ -189,7 +190,7 @@
   </xs:element>
   <xs:element name="license" type="license">
     <xs:annotation>
-      <xs:documentation>License</xs:documentation>
+      <xs:documentation>A legal document giving official permission to do something with the dataset.</xs:documentation>
     </xs:annotation>
   </xs:element>
   <xs:element name="citation" type="xs:string">
