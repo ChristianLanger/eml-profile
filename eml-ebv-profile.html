@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>EBV metadata reference guide</title>
+    <meta name="description" content="EBV EML profile">
+    <meta name="author" content="Christian Langer">
+    <style type="text/css">
+
+    body{
+		text-align:center;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: #212529;
+    	}
+
+    [hidden] {
+        display: none;
+    }
+
+    section {
+        margin: 5px;
+        padding:10px;
+    }
+
+    label {
+        display: block;
+    }
+
+    label>span {
+        margin-right: 5px;
+        min-width: 50px;
+
+    }
+
+    button[type='submit']:before {
+        content: "OK";
+    }
+
+    button.add:before {
+        content: "+ ";
+    }
+
+    button.remove:before {
+        content: "-";
+    }
+
+    input[data-xsd2html2xml-duration='days']+span:after {
+        content: " (days)";
+    }
+
+    input[data-xsd2html2xml-duration='minutes']+span:after {
+        content: " (minutes)";
+    }
+
+    fieldset {
+        padding: 30px;
+        display:inline-block;
+        background-color: #f3f3f3;
+        border: 1px solid #c3c3c3;
+        border-radius: 10px;
+    }
+
+    legend {
+        color: #038c7c;
+        font-size: 25px;
+    }
+
+    button {
+        color: #333;
+        background-color: #fff;
+        border-color: #ccc;
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        background-image: none;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border-radius: 4px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        margin: 0 10px 0 10px;
+    }
+
+    .form-control {
+        display: block;
+        width: 95%;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+        margin: 10px;
+    }
+
+    input[type='radio'] {
+        float: left;
+    }
+
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    @media (min-width: 1200px){
+        .container {
+            width: 1170px;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .container {
+            width: 970px;
+        }
+    }
+    
+
+
+    </style>
+    <script type="text/javascript">
+    /* POLYFILLS */
+
+    /* add .matches if not natively supported */
+    if (!Element.prototype.matches)
+        Element.prototype.matches = Element.prototype.msMatchesSelector ||
+        Element.prototype.webkitMatchesSelector;
+
+    /* add .closest if not natively supported */
+    if (!Element.prototype.closest)
+        Element.prototype.closest = function(s) {
+            var el = this;
+            do {
+                if (el.nodeType !== 1) return null;
+                if (el.matches(s)) return el;
+                el = el.parentElement || el.parentNode;
+            } while (el !== null);
+            return null;
+        };
+
+    /* add .forEach if not natively supported */
+    if (!NodeList.prototype.forEach) {
+        NodeList.prototype.forEach = function(callback) {
+            var i = 0;
+            while (i != this.length) {
+                callback.apply(this, [this[i], i, this]);
+                i++;
+            }
+        };
+    }
+
+    /* add .previousElementSibling if not supported */
+    (function(arr) {
+        arr.forEach(function(item) {
+            if (item.hasOwnProperty('previousElementSibling')) {
+                return;
+            }
+            Object.defineProperty(item, 'previousElementSibling', {
+                configurable: true,
+                enumerable: true,
+                get: function() {
+                    let el = this;
+                    while (el = el.previousSibling) {
+                        if (el.nodeType === 1) {
+                            return el;
+                        }
+                    }
+                    return null;
+                },
+                set: undefined
+            });
+        });
+    })([Element.prototype, CharacterData.prototype]);
+    </script>
+    <script type="text/javascript">
+    /* XML GENERATORS */
+
+    var htmlToXML = function(root) {
+        var namespaces = [];
+        var prefixes = [];
+
+        document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])").forEach(function(o) {
+            if (namespaces.indexOf(
+                    o.getAttribute("data-xsd2html2xml-namespace")
+                ) == -1) {
+                namespaces.push(
+                    o.getAttribute("data-xsd2html2xml-namespace")
+                );
+
+                prefixes.push(
+                    o.getAttribute("data-xsd2html2xml-name").substring(
+                        0, o.getAttribute("data-xsd2html2xml-name").indexOf(":")
+                    )
+                );
+            }
+        });
+
+        var namespaceString = "";
+
+        namespaces.forEach(function(o, i) {
+            namespaceString = namespaceString.concat(
+                "xmlns".concat(
+                    (prefixes[i] == "" ? "=" : ":".concat(prefixes[i].concat("=")))
+                ).concat(
+                    "\"".concat(namespaces[i]).concat("\" ")
+                )
+            )
+        });
+
+        return String.fromCharCode(60).concat("?xml version=\"1.0\"?").concat(String.fromCharCode(62)).concat(getXML(root, false, namespaceString.trim()));
+    };
+
+    var getXML = function(parent, attributesOnly, namespaceString) {
+        var xml = "";
+        var children = [].slice.call(parent.children);
+        children.forEach(function(o) {
+            if (!o.hasAttribute("hidden")) {
+                switch (o.getAttribute("data-xsd2html2xml-type")) {
+                    case "element":
+                        if (!attributesOnly) xml = xml.concat(String.fromCharCode(60)).concat(o.getAttribute("data-xsd2html2xml-name")).concat(getXML(o, true)).concat(String.fromCharCode(62)).concat(function() {
+                            if (o.nodeName.toLowerCase() === "label") {
+                                return getContent(o);
+                            } else return getXML(o)
+                        }()).concat(String.fromCharCode(60)).concat("/").concat(o.getAttribute("data-xsd2html2xml-name")).concat(String.fromCharCode(62));
+                        break;
+                    case "attribute":
+                        if (attributesOnly)
+                            if (getContent(o) ||
+                                (o.getElementsByTagName("input").length > 0 ?
+                                    o.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase() === "boolean" :
+                                    false
+                                ))
+                                xml = xml.concat(" ").concat(o.getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(o)).concat("\"");
+                        break;
+                    case "content":
+                        if (!attributesOnly) xml = xml.concat(getContent(o));
+                        break;
+                    default:
+                        if (!attributesOnly) {
+                            if (!o.getAttribute("data-xsd2html2xml-choice"))
+                                xml = xml.concat(getXML(o));
+
+                            if (o.getAttribute("data-xsd2html2xml-choice")) {
+                                var node = o.previousElementSibling;
+                                while (node.hasAttribute("data-xsd2html2xml-choice")) {
+                                    node = node.previousElementSibling;
+                                };
+
+                                if (node.getElementsByTagName("input")[0].checked)
+                                    xml = xml.concat(getXML(o));
+                            };
+                        }
+                        break;
+                }
+            }
+        });
+
+        if (namespaceString) {
+            xml = xml.substring(0, xml.indexOf(String.fromCharCode(62))).concat(" ").concat(namespaceString).concat(xml.substring(xml.indexOf(String.fromCharCode(62))));
+        }
+
+        return xml;
+    };
+
+    var getContent = function(node) {
+        if (node.getElementsByTagName("input").length != 0) {
+            switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
+                case "checkbox":
+                    return node.getElementsByTagName("input")[0].checked;
+                case "file":
+                case "range":
+                case "date":
+                case "time":
+                case "datetime-local":
+                    return node.getElementsByTagName("input")[0].getAttribute("value");
+                default:
+                    switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
+                        case "gday":
+                        case "gmonth":
+                        case "gmonthday":
+                        case "gyear":
+                        case "gyearmonth":
+                            return node.getElementsByTagName("input")[0].getAttribute("value");
+                        default:
+                            return node.getElementsByTagName("input")[0].value;
+                    }
+            }
+        } else if (node.getElementsByTagName("select").length != 0) {
+            return node.getElementsByTagName("select")[0].value;
+        } else if (node.getElementsByTagName("textarea").length != 0) {
+            return node.getElementsByTagName("textarea")[0].value;
+        }
+    }
+    </script>
+    <script type="text/javascript">
+    /* HTML POPULATORS */
+
+    var addHiddenFields = function() {
+        document.querySelectorAll("[data-xsd2html2xml-min], [data-xsd2html2xml-max]").forEach(function(o) {
+            //add hidden element
+            var newNode = o.previousElementSibling.cloneNode(true);
+
+            newNode.setAttribute("hidden", "");
+
+            newNode.querySelectorAll("input, textarea, select").forEach(function(p) {
+                p.setAttribute("disabled", "");
+            });
+
+            o.parentElement.insertBefore(
+                newNode, o
+            );
+        });
+    };
+
+    var ensureMinimum = function() {
+        document.querySelectorAll("[data-xsd2html2xml-min], [data-xsd2html2xml-max]").forEach(function(o) {
+            //add minimum number of elements
+            if (o.hasAttribute("data-xsd2html2xml-min")) {
+                //if no minimum, remove element
+                if (o.getAttribute("data-xsd2html2xml-min") === "0"
+                    //check for input elements existing to handle empty elements
+                    &&
+                    o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select")
+                    //check if element has been populated with data from an xml document
+                    &&
+                    !o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select").hasAttribute("data-xsd2html2xml-filled")) {
+                    clickRemoveButton(
+                        o.parentElement.children[0].querySelector("legend > button.remove, span > button.remove")
+                    );
+                    //if there is only one allowed element that has been filled, disable the button
+                } else if (o.getAttribute("data-xsd2html2xml-max") === "1"
+                    //check for input elements existing to handle empty elements
+                    &&
+                    o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select")
+                    //check if element has been populated with data from an xml document
+                    &&
+                    o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select").hasAttribute("data-xsd2html2xml-filled")) {
+                    o.setAttribute("disabled", "disabled");
+                    //else, add up to minimum number of elements
+                } else {
+                    var remainder = o.getAttribute("data-xsd2html2xml-min") - (o.parentNode.children.length - 2);
+
+                    for (i = 0; i < remainder; i++) {
+                        clickAddButton(o);
+                    };
+                };
+            };
+        });
+    };
+
+
+    var setValue = function(element, value) {
+        element.querySelector("input, textarea, select").setAttribute("data-xsd2html2xml-filled", "true");
+
+        if (element.querySelector("input") !== null) {
+            if (element.querySelector("input").getAttribute("data-xsd2html2xml-primitive") === "boolean") {
+                if (value === "true") {
+                    element.querySelector("input").setAttribute("checked", "checked");
+                };
+            } else {
+                element.querySelector("input").setAttribute("value", value);
+            };
+
+            if (element.querySelector("input").getAttribute("type") === "file") {
+                element.querySelector("input").removeAttribute("required");
+                element.querySelector("input").setAttribute("data-xsd2html2xml-required", "true");
+            };
+        };
+
+        if (element.querySelector("textarea") !== null) {
+            element.querySelector("textarea").textContent = value;
+        };
+
+        if (element.querySelector("select") !== null) {
+            element.querySelector("select option[value = '".concat(value).concat("']")).setAttribute("selected", "selected");
+        };
+    };
+
+    var parseNode = function(node, element) {
+        //iterate through the node's attributes and fill them out
+        for (var i = 0; i < node.attributes.length; i++) {
+            var attribute = element.querySelector(
+                "[data-xsd2html2xml-xpath = '".concat(
+                    element.getAttribute("data-xsd2html2xml-xpath").concat(
+                        "/@".concat(node.attributes[i].nodeName)
+                        //"/@*[name() = \"".concat(node.attributes[i].nodeName).concat("\"]")
+                    )
+                ).concat("']")
+            );
+
+            if (attribute !== null) {
+                setValue(attribute, node.attributes[i].nodeValue);
+            };
+        };
+
+        //if there is only one (non-element) node, it must contain the value; note: this will not work for potential mixed="true" support
+        if (node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE) {
+            //in the case of complexTypes with simpleContents, select the sub-element that actually contains the input element
+            if (element.querySelectorAll("[data-xsd2html2xml-xpath='".concat(element.getAttribute("data-xsd2html2xml-xpath")).concat("']")).length > 0) {
+                setValue(element.querySelector("[data-xsd2html2xml-xpath='".concat(element.getAttribute("data-xsd2html2xml-xpath")).concat("']")), node.childNodes[0].nodeValue);
+            } else {
+                setValue(element, node.childNodes[0].nodeValue);
+            };
+            //else, iterate through the children
+        } else {
+            var previousChildName;
+
+            for (var i = 0; i < node.childNodes.length; i++) {
+                var childNode = node.childNodes[i];
+
+                if (childNode.nodeType === Node.ELEMENT_NODE) {
+                    //find the corresponding element
+                    var childElement = element.querySelector(
+                        "[data-xsd2html2xml-xpath = '".concat(
+                            element.getAttribute("data-xsd2html2xml-xpath").concat(
+                                "/".concat(childNode.nodeName)
+                                //"/*[name() = \"".concat(childNode.nodeName).concat("\"]")
+                            )
+                        ).concat("']")
+                    );
+
+                    //if there is an add-button (and it is not the first child node being parsed), add an element
+                    var button;
+
+                    if (childElement.parentElement.lastElementChild.nodeName.toLowerCase() === "button") {
+                        button = childElement.parentElement.lastElementChild;
+                    } else if (childElement.parentElement.parentElement.parentElement.lastElementChild.nodeName.toLowerCase() === "button" &&
+                        !childElement.parentElement.parentElement.parentElement.lastElementChild.hasAttribute("data-xsd2html2xml-element")) {
+                        button = childElement.parentElement.parentElement.parentElement.lastElementChild;
+                    };
+
+                    if (button !== null && childNode.nodeName === previousChildName) {
+                        clickAddButton(button);
+
+                        parseNode(
+                            childNode,
+                            button.previousElementSibling.previousElementSibling
+                            //childElement.parentElement.lastElementChild.previousElementSibling.previousElementSibling
+                        );
+                        //else, use the already generated element
+                    } else {
+                        parseNode(
+                            childNode,
+                            childElement
+                        );
+                    };
+
+                    previousChildName = childNode.nodeName;
+                }
+            };
+        }
+    };
+    </script>
+    <script type="text/javascript">
+    /* VALUE FIXERS */
+
+    var setValues = function() {
+        /* specifically set values on ranges */
+        document.querySelectorAll("[type='range']").forEach(function(o) {
+            if (o.getAttribute("value")) {
+                o.value = o.getAttribute("value").replace(/\D/g, "");
+            } else if (o.getAttribute("min")) {
+                o.value = o.getAttribute("min");
+            } else if (o.getAttribute("max")) {
+                o.value = o.getAttribute("max");
+            } else {
+                o.value = 0;
+                o.onchange();
+            };
+
+            o.previousElementSibling.textContent = o.value;
+        });
+
+        /* specifically set values on datepickers */
+        document.querySelectorAll("[data-xsd2html2xml-primitive='gday']").forEach(function(o) {
+            if (o.getAttribute("value")) {
+                o.value = o.getAttribute("value").replace(/-+0?/g, "");
+            }
+        });
+        document.querySelectorAll("[data-xsd2html2xml-primitive='gmonth']").forEach(function(o) {
+            if (o.getAttribute("value")) {
+                o.value = o.getAttribute("value").replace(/-+0?/g, "");
+            }
+        });
+        document.querySelectorAll("[data-xsd2html2xml-primitive='gmonthday']").forEach(function(o) {
+            if (o.getAttribute("value")) {
+                o.value = new Date().getFullYear().toString().concat(o.getAttribute("value").substring(1));
+            }
+        });
+    };
+    </script>
+    <script type="text/javascript">
+    /* EVENT HANDLERS */
+
+    var clickAddButton = function(button) {
+        var newNode = button.previousElementSibling.cloneNode(true);
+
+        newNode.removeAttribute("hidden");
+
+        newNode.querySelectorAll("input, select, textarea").forEach(function(o) {
+            if (o.closest("[hidden]") == null)
+                o.removeAttribute("disabled");
+        });
+
+        //set a new random id for radio buttons
+        newNode.querySelectorAll("input[type='radio']").forEach(function(o) {
+            if (o.parentElement.previousElementSibling != null &&
+                o.parentElement.previousElementSibling.previousElementSibling != null &&
+                o.parentElement.previousElementSibling.previousElementSibling.children.length > 0 &&
+                o.parentElement.previousElementSibling.previousElementSibling.children[0].hasAttribute("type") &&
+                o.parentElement.previousElementSibling.previousElementSibling.children[0].getAttribute("type") === "radio") {
+                o.setAttribute("name", o.parentElement.previousElementSibling.previousElementSibling.children[0].getAttribute("name"));
+            } else {
+                o.setAttribute("name", o.getAttribute("name").concat(
+                    Math.random().toString().substring(2)
+                ));
+            };
+
+            o.setAttribute("onclick", "clickRadioInput(this, '".concat(o.getAttribute("name")).concat("');"));
+        });
+
+        button.parentNode.insertBefore(
+            newNode, button.previousElementSibling
+        );
+
+        if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
+            button.setAttribute("disabled", "disabled");
+    }
+
+    var clickRemoveButton = function(button) {
+        if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-min"))
+            button.closest("section").lastElementChild.click();
+
+        if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-max"))
+            button.closest("section").lastElementChild.removeAttribute("disabled");
+
+        button.closest("section").removeChild(
+            button.closest("fieldset, label")
+        );
+    }
+
+    var clickRadioInput = function(input, name) {
+        var activeSections = [];
+        var currentSection = input.parentElement.nextElementSibling;
+
+        while (currentSection && currentSection.hasAttribute("data-xsd2html2xml-choice")) {
+            activeSections.push(currentSection);
+            currentSection = currentSection.nextElementSibling;
+        };
+
+        document.querySelectorAll("[name=".concat(name).concat("]")).forEach(function(o) {
+            o.removeAttribute("checked");
+
+            var section = o.parentElement.nextElementSibling;
+
+            while (section && section.hasAttribute("data-xsd2html2xml-choice")) {
+                section.querySelectorAll("input, select, textarea").forEach(function(p) {
+                    var contained = false;
+                    activeSections.forEach(function(q) {
+                        if (q.contains(p)) contained = true;
+                    });
+
+                    if (contained) {
+                        if (p.closest("[data-xsd2html2xml-choice]") === section) {
+                            if (p.closest("*[hidden]") === null)
+                                p.removeAttribute("disabled");
+                            else
+                                p.setAttribute("disabled", "disabled");
+                        }
+                    } else {
+                        p.setAttribute("disabled", "disabled");
+                    };
+                });
+
+                section = section.nextElementSibling;
+            };
+        });
+
+        input.setAttribute("checked", "checked");
+    }
+
+    var pickFile = function(input, file, type) {
+        var resetFilePicker = function(input) {
+            input.removeAttribute("value");
+            input.removeAttribute("type");
+            input.setAttribute("type", "file");
+        }
+
+        var fileReader = new FileReader();
+
+        fileReader.onloadend = function() {
+            if (fileReader.error) {
+                alert(fileReader.error);
+                resetFilePicker(input);
+            } else {
+                input.setAttribute("value",
+                    (type.endsWith(":base64binary")) ?
+                    fileReader.result.substring(fileReader.result.indexOf(",") + 1)
+                    //convert base64 to base16 (hexBinary)
+                    :
+                    atob(fileReader.result.substring(fileReader.result.indexOf(",") + 1))
+                    .split('')
+                    .map(function(aChar) {
+                        return ('0' + aChar.charCodeAt(0).toString(16)).slice(-2);
+                    })
+                    .join('')
+                    .toUpperCase()
+                );
+            };
+        };
+
+        if (file) {
+            fileReader.readAsDataURL(file);
+        } else {
+            resetFilePicker(input);
+        }
+
+        if (input.getAttribute("data-xsd2html2xml-required")) input.setAttribute("required", "required");
+    }
+    </script>
+    <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded",
+        function() {
+            /* INITIAL CALLS */
+
+            addHiddenFields();
+            setValues();
+            ensureMinimum();
+
+            document.querySelectorAll("[data-xsd2html2xml-filled='true']").forEach(function(o) {
+                if (o.closest("[data-xsd2html2xml-choice]")) {
+                    var node = o.closest("[data-xsd2html2xml-choice]").previousElementSibling;
+                    while (node) {
+                        if (!node.hasAttribute("data-xsd2html2xml-choice")) {
+                            node.querySelector("input[type='radio']").click();
+                            break;
+                        } else {
+                            node = node.previousElementSibling;
+                        };
+                    };
+                };
+            });
+        }
+    );
+    </script>
+
+</head>
+
+<body>
+
+<div class="container">
+	<h1>EBV EML profile schema</h1>
+    <h3>First draft of the EBV Metadata EML profile schema.</h3>
+
+    <p>Generated from <a href="https://github.com/ChristianLanger/eml-profile/blob/master/eml-ebv-profile.xsd" target="_blank">github.com/../master/eml-ebv-profile.xsd</a></p>
+
+    <hr>
+    
+        <section>
+            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="dataset" data-xsd2html2xml-xpath="/dataset" style="background-color:#fff">
+                <legend>dataset</legend>
+                <h4>The dataset element is a wrapper for all other elements relating to a single dataset</h4>
+                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="alternateIdentifier" data-xsd2html2xml-xpath="/dataset/alternateIdentifier"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This is the only identifier issued by the EBV resource for the metadata document; it is a UUID" /><span>This is the only identifier issued by the EBV resource for the metadata document; it is a UUID<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">alternateIdentifier</button></section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="title" data-xsd2html2xml-xpath="/dataset/title">
+                        <legend> title <button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="title" data-xsd2html2xml-xpath="/dataset/title"><span>The 'title' field provides a description of the resource that is being documented that is long enough to differentiate it from other similar resources.<br>Multiple titles may be provided, particularly when trying to express the title in more than one language (use the "xml:lang" attribute to indicate the language if not English/en).</span></label><label data-xsd2html2xml-namespace="http://www.w3.org/1999/xhtml" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="lang" data-xsd2html2xml-xpath="/dataset/title/@lang"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" pattern="([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*" data-xsd2html2xml-primitive="language" data-xsd2html2xml-description="&#10;    " /><span>
+                            </span></label>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);"> title </button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="ebv" data-xsd2html2xml-xpath="/dataset/ebv">
+                        <legend>ebv<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>The detailed information about the EBV candidate in the domain of the GEO BON List of Essential Biodiversity Variables.</h4>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="class" data-xsd2html2xml-xpath="/dataset/ebv/class"><select class="form-control" onchange="this.childNodes.forEach(function(o) { if (o.nodeType == Node.ELEMENT_NODE) o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-description="A class name in the domain of the GEO BON List of Essential Biodiversity Variables.">
+                                    <option value="Genetic composition">Genetic composition</option>
+                                    <option value="Species populations">Species populations</option>
+                                    <option value="Species traits">Species traits</option>
+                                    <option value="Community composition">Community composition</option>
+                                    <option value="Ecosystem function">Ecosystem function</option>
+                                    <option value="Ecosystem structure">Ecosystem structure</option>
+                                </select><span>A class name in the domain of the GEO BON List of Essential Biodiversity Variables.</span></label></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="name" data-xsd2html2xml-xpath="/dataset/ebv/name"><select class="form-control" onchange="this.childNodes.forEach(function(o) { if (o.nodeType == Node.ELEMENT_NODE) o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-description="A name of the Essential Biodiversity Variable, preferably in the domain of the GEO BON List of Essential Biodiversity Variables.">
+                                    <option value="Co-ancestry">Co-ancestry</option>
+                                    <option value="Allelic diversity">Allelic diversity</option>
+                                    <option value="Population genetic differentiation">Population genetic differentiation</option>
+                                    <option value="Breed and variety diversity">Breed and variety diversity</option>
+                                    <option value="Species distribution">Species distribution</option>
+                                    <option value="Population abundance">Population abundance</option>
+                                    <option value="Population structure by age/size class">Population structure by age/size class</option>
+                                    <option value="Phenology">Phenology</option>
+                                    <option value="Morphology">Morphology</option>
+                                    <option value="Reproduction">Reproduction</option>
+                                    <option value="Physiology">Physiology</option>
+                                    <option value="Movement">Movement</option>
+                                    <option value="Taxonomic diversity">Taxonomic diversity</option>
+                                    <option value="Species interactions">Species interactions</option>
+                                    <option value="Net primary productivity">Net primary productivity</option>
+                                    <option value="Secondary productivity">Secondary productivity</option>
+                                    <option value="Nutrient retention">Nutrient retention</option>
+                                    <option value="Disturbance regime">Disturbance regime</option>
+                                    <option value="Habitat structure">Habitat structure</option>
+                                    <option value="Ecosystem extent and fragmentation">Ecosystem extent and fragmentation</option>
+                                    <option value="Ecosystem composition by functional type">Ecosystem composition by functional type</option>
+                                </select><span>A name of the Essential Biodiversity Variable, preferably in the domain of the GEO BON List of Essential Biodiversity Variables.</span></label></section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">ebv</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="creator" data-xsd2html2xml-xpath="/dataset/creator">
+                        <legend>creator<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>The creator is the person who created the resource (not necessarily the author of this metadata about the resource).<br>This is the person or institution to contact with questions about the use, interpretation of a dataset.</h4>
+                        <label><input type="radio" name="idm47764258727312" required="required" onclick="clickRadioInput(this, 'idm47764258727312');" data-xsd2html2xml-description="1" /><span>1</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="organizationName" data-xsd2html2xml-xpath="/dataset/creator/organizationName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described." /><span>The full name of the organization that is associated with the resource.<br>This field is intended to describe which institution or overall organization is associated with the resource being described.</span></label></section><label><input type="radio" name="idm47764258727312" required="required" onclick="clickRadioInput(this, 'idm47764258727312');" data-xsd2html2xml-description="2" /><span>2</span></label>
+                        <section data-xsd2html2xml-choice="true">
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="individualName" data-xsd2html2xml-xpath="/dataset/creator/individualName">
+                                <legend>individualName</legend>
+                                <p>The individualName field contains subfields so that a person's name can be broken down into parts.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="givenName" data-xsd2html2xml-xpath="/dataset/creator/individualName/givenName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). " /><span>The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">givenName </button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="surName" data-xsd2html2xml-xpath="/dataset/creator/individualName/surName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The surname field is used for the last name of the individual associated with the resource. This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. " /><span>The surname field is used for the last name of the individual associated with the resource.<br>This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. </span></label></section>
+                            </fieldset>
+                        </section><label><input type="radio" name="idm47764258727312" required="required" onclick="clickRadioInput(this, 'idm47764258727312');" data-xsd2html2xml-description="3" /><span>3</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="positionName" data-xsd2html2xml-xpath="/dataset/creator/positionName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This field is intended to be used instead of a particular person or full organization name. If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager." /><span>This field is intended to be used instead of a particular person or full organization name.<br>If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager.</span></label></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="address" data-xsd2html2xml-xpath="/dataset/creator/address">
+                                <legend>address<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The address field is a container for multiple subfields that describe the physical or electronic address of the responsible party for a resource.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="deliveryPoint" data-xsd2html2xml-xpath="/dataset/creator/address/deliveryPoint"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15" /><span>The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">deliveryPoint</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="city" data-xsd2html2xml-xpath="/dataset/creator/address/city"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The city field is used for the city name of the contact associated with a particular resource." /><span>The city field is used for the city name of the contact associated with a particular resource.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">city</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="administrativeArea" data-xsd2html2xml-xpath="/dataset/creator/address/administrativeArea"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas." /><span>The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">administrativeArea</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="postalCode" data-xsd2html2xml-xpath="/dataset/creator/address/postalCode"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. " /><span>The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">postalCode</button></section>
+                                <section>
+                                	<label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="country" data-xsd2html2xml-xpath="/dataset/creator/address/country">
+                                	<input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The country field is used for the name of the contact's country." />
+                                	<span>The country field is used for the name of the contact's country.
+                                		<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                	</span></label>
+                                	<button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">country</button>
+                                </section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">address</button>
+                        </section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="phone" data-xsd2html2xml-xpath="/dataset/creator/phone"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The phone field describes information about the responsible party's telephone, be it a voice phone, fax." /><span>The phone field describes information about the responsible party's telephone, be it a voice phone, fax.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">phone</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="electronicMailAddress" data-xsd2html2xml-xpath="/dataset/creator/electronicMailAddress"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The electronic mail address is the email address for the party. It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address." /><span>The electronic mail address is the email address for the party.<br>It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">electronicMailAddress</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="onlineUrl" data-xsd2html2xml-xpath="/dataset/creator/onlineUrl"><input type="url" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="anyuri" data-xsd2html2xml-description="A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party." /><span>A link to associated online information, usually a web site.<br>When the party represents an organization, this is the URL to a website or other online information about the organization.<br>If the party is an individual, it might be their personal web site or other related online information about the party.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">onlineUrl</button></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/creator/userId">
+                                <legend>userId<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/creator/userId"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="An identifier that links this party to a directory of personnel. Although specific contact information for a party might change, the underlying correspondence to a real individual does not.  This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party." /><span>An identifier that links this party to a directory of personnel.<br>Although specific contact information for a party might change, the underlying correspondence to a real individual does not.<br>This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party.</span></label><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="directory" data-xsd2html2xml-xpath="/dataset/creator/userId/@directory"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This attribute names the directory system to which this userId applies. This will generally be a URL that shows how to look up information, for example an LDAP url. However, it could also be a non-parsable description of the directory system if that is all that is available." /><span>This attribute names the directory system to which this userId applies.<br>This will generally be a URL that shows how to look up information, for example an LDAP url.<br>However, it could also be a non-parsable description of the directory system if that is all that is available.</span></label>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">userId</button>
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">creator</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="metadataProvider" data-xsd2html2xml-xpath="/dataset/metadataProvider">
+                        <legend>metadataProvider<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>The party responsible for the creation of the metadata document</h4>
+                        <label><input type="radio" name="idm47764255720672" required="required" onclick="clickRadioInput(this, 'idm47764255720672');" data-xsd2html2xml-description="1" /><span>1</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="organizationName" data-xsd2html2xml-xpath="/dataset/metadataProvider/organizationName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described." /><span>The full name of the organization that is associated with the resource.<br>This field is intended to describe which institution or overall organization is associated with the resource being described.</span></label></section><label><input type="radio" name="idm47764255720672" required="required" onclick="clickRadioInput(this, 'idm47764255720672');" data-xsd2html2xml-description="2" /><span>2</span></label>
+                        <section data-xsd2html2xml-choice="true">
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="individualName" data-xsd2html2xml-xpath="/dataset/metadataProvider/individualName">
+                                <legend>individualName</legend>
+                                <p>The individualName field contains subfields so that a person's name can be broken down into parts.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="givenName" data-xsd2html2xml-xpath="/dataset/metadataProvider/individualName/givenName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). " /><span>The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">givenName</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="surName" data-xsd2html2xml-xpath="/dataset/metadataProvider/individualName/surName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The surname field is used for the last name of the individual associated with the resource. This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. " /><span>The surname field is used for the last name of the individual associated with the resource.<br>This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. </span></label></section>
+                            </fieldset>
+                        </section><label><input type="radio" name="idm47764255720672" required="required" onclick="clickRadioInput(this, 'idm47764255720672');" data-xsd2html2xml-description="3" /><span>3</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="positionName" data-xsd2html2xml-xpath="/dataset/metadataProvider/positionName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This field is intended to be used instead of a particular person or full organization name. If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager." /><span>This field is intended to be used instead of a particular person or full organization name.<br>If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager.</span></label></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="address" data-xsd2html2xml-xpath="/dataset/metadataProvider/address">
+                                <legend>address<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The address field is a container for multiple subfields that describe the physical or electronic address of the responsible party for a resource.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="deliveryPoint" data-xsd2html2xml-xpath="/dataset/metadataProvider/address/deliveryPoint"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15" /><span>The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">deliveryPoint</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="city" data-xsd2html2xml-xpath="/dataset/metadataProvider/address/city"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The city field is used for the city name of the contact associated with a particular resource." /><span>The city field is used for the city name of the contact associated with a particular resource.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">city</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="administrativeArea" data-xsd2html2xml-xpath="/dataset/metadataProvider/address/administrativeArea"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas." /><span>The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">administrativeArea</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="postalCode" data-xsd2html2xml-xpath="/dataset/metadataProvider/address/postalCode"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. " /><span>The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">postalCode</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="country" data-xsd2html2xml-xpath="/dataset/metadataProvider/address/country"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The country field is used for the name of the contact's country." /><span>The country field is used for the name of the contact's country.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">country</button></section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">address</button>
+                        </section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="phone" data-xsd2html2xml-xpath="/dataset/metadataProvider/phone"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The phone field describes information about the responsible party's telephone, be it a voice phone, fax." /><span>The phone field describes information about the responsible party's telephone, be it a voice phone, fax.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">phone</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="electronicMailAddress" data-xsd2html2xml-xpath="/dataset/metadataProvider/electronicMailAddress"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The electronic mail address is the email address for the party. It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address." /><span>The electronic mail address is the email address for the party.<br>It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">electronicMailAddress</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="onlineUrl" data-xsd2html2xml-xpath="/dataset/metadataProvider/onlineUrl"><input type="url" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="anyuri" data-xsd2html2xml-description="A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party." /><span>A link to associated online information, usually a web site.<br>When the party represents an organization, this is the URL to a website or other online information about the organization.<br>If the party is an individual, it might be their personal web site or other related online information about the party.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">onlineUrl</button></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/metadataProvider/userId">
+                                <legend>userId<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/metadataProvider/userId"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="An identifier that links this party to a directory of personnel. Although specific contact information for a party might change, the underlying correspondence to a real individual does not.  This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party." /><span>An identifier that links this party to a directory of personnel. Although specific contact information for a party might change, the underlying correspondence to a real individual does not.<br>This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party.</span></label><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="directory" data-xsd2html2xml-xpath="/dataset/metadataProvider/userId/@directory"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This attribute names the directory system to which this userId applies. This will generally be a URL that shows how to look up information, for example an LDAP url. However, it could also be a non-parsable description of the directory system if that is all that is available." /><span>This attribute names the directory system to which this userId applies.<br>This will generally be a URL that shows how to look up information, for example an LDAP url.<br>However, it could also be a non-parsable description of the directory system if that is all that is available.</span></label>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">userId</button>
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);"> metadataProvider</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="associatedParty" data-xsd2html2xml-xpath="/dataset/associatedParty">
+                        <legend>associatedParty<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>A party associated with the resource. Parties have particular roles.</h4>
+                        <label><input type="radio" name="idm47764256828416" required="required" onclick="clickRadioInput(this, 'idm47764256828416');" data-xsd2html2xml-description="1" /><span>1</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="organizationName" data-xsd2html2xml-xpath="/dataset/associatedParty/organizationName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described." /><span>The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described.</span></label></section><label><input type="radio" name="idm47764256828416" required="required" onclick="clickRadioInput(this, 'idm47764256828416');" data-xsd2html2xml-description="2" /><span>2</span></label>
+                        <section data-xsd2html2xml-choice="true">
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="individualName" data-xsd2html2xml-xpath="/dataset/associatedParty/individualName">
+                                <legend>individualName</legend>
+                                <p>The individualName field contains subfields so that a person's name can be broken down into parts.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="givenName" data-xsd2html2xml-xpath="/dataset/associatedParty/individualName/givenName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). " /><span>The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">givenName</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="surName" data-xsd2html2xml-xpath="/dataset/associatedParty/individualName/surName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The surname field is used for the last name of the individual associated with the resource. This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. " /><span>The surname field is used for the last name of the individual associated with the resource.<br>This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. </span></label></section>
+                            </fieldset>
+                        </section><label><input type="radio" name="idm47764256828416" required="required" onclick="clickRadioInput(this, 'idm47764256828416');" data-xsd2html2xml-description="3" /><span>3</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="positionName" data-xsd2html2xml-xpath="/dataset/associatedParty/positionName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This field is intended to be used instead of a particular person or full organization name. If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager." /><span>This field is intended to be used instead of a particular person or full organization name.<br>If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager.</span></label></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="address" data-xsd2html2xml-xpath="/dataset/associatedParty/address">
+                                <legend>address<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The address field is a container for multiple subfields that describe the physical or electronic address of the responsible party for a resource.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="deliveryPoint" data-xsd2html2xml-xpath="/dataset/associatedParty/address/deliveryPoint"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15" /><span>The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">deliveryPoint</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="city" data-xsd2html2xml-xpath="/dataset/associatedParty/address/city"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The city field is used for the city name of the contact associated with a particular resource." /><span>The city field is used for the city name of the contact associated with a particular resource.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">city</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="administrativeArea" data-xsd2html2xml-xpath="/dataset/associatedParty/address/administrativeArea"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas." /><span>The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">administrativeArea</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="postalCode" data-xsd2html2xml-xpath="/dataset/associatedParty/address/postalCode"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. " /><span>The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">postalCode</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="country" data-xsd2html2xml-xpath="/dataset/associatedParty/address/country"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The country field is used for the name of the contact's country." /><span>The country field is used for the name of the contact's country.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">country</button></section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">address</button>
+                        </section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="phone" data-xsd2html2xml-xpath="/dataset/associatedParty/phone"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The phone field describes information about the responsible party's telephone, be it a voice phone, fax." /><span>The phone field describes information about the responsible party's telephone, be it a voice phone, fax.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">phone</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="electronicMailAddress" data-xsd2html2xml-xpath="/dataset/associatedParty/electronicMailAddress"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The electronic mail address is the email address for the party. It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address." /><span>The electronic mail address is the email address for the party.<br>It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">electronicMailAddress</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="onlineUrl" data-xsd2html2xml-xpath="/dataset/associatedParty/onlineUrl"><input type="url" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="anyuri" data-xsd2html2xml-description="A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party." /><span>A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">onlineUrl</button></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/associatedParty/userId">
+                                <legend>userId<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/associatedParty/userId"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="An identifier that links this party to a directory of personnel. Although specific contact information for a party might change, the underlying correspondence to a real individual does not.  This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party." /><span>An identifier that links this party to a directory of personnel.<br>Although specific contact information for a party might change, the underlying correspondence to a real individual does not.<br>This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party.</span></label><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="directory" data-xsd2html2xml-xpath="/dataset/associatedParty/userId/@directory"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This attribute names the directory system to which this userId applies. This will generally be a URL that shows how to look up information, for example an LDAP url. However, it could also be a non-parsable description of the directory system if that is all that is available." /><span>This attribute names the directory system to which this userId applies.<br>This will generally be a URL that shows how to look up information, for example an LDAP url.<br>However, it could also be a non-parsable description of the directory system if that is all that is available.</span></label>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">userId</button>
+                        </section>
+                        
+                        
+                        
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="role" data-xsd2html2xml-xpath="/dataset/associatedParty/role"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="Use this field to describe the role the party played with respect to the resource. Some potential roles include technician, reviewer, principal investigator, and many others." /><span>Use this field to describe the role the party played with respect to the resource. Some potential roles include technician, reviewer, principal investigator, and many others.</span></label></section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">associatedParty</button>
+                </section>
+                <section>
+                	<fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="pubDate" data-xsd2html2xml-xpath="/dataset/pubDate">
+                		<legend>pubDate</legend>
+                		<h4>The date on which the resource was published</h4>
+                	<label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="pubDate" data-xsd2html2xml-xpath="/dataset/pubDate"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="" data-xsd2html2xml-description="The date on which the resource was published" /></label>
+                </fieldset>
+                </section>
+
+                <section>
+                	<fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="license" data-xsd2html2xml-xpath="/dataset/license">
+                		<legend>license</legend>
+                		<h4>A legal document giving official permission to do something with the dataset.</h4>
+
+                	<label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="license" data-xsd2html2xml-xpath="/dataset/license"><select class="form-control" onchange="this.childNodes.forEach(function(o) { if (o.nodeType == Node.ELEMENT_NODE) o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-description="A legal document giving official permission to do something with the dataset.">
+                            <option value="CCO">CCO</option>
+                            <option value="CC BY">CC BY</option>
+                            <option value="CC BY-NC">CC BY-NC</option>
+                        </select></label>
+                      </fieldset>
+                      </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="citation" data-xsd2html2xml-xpath="/dataset/citation">
+                        <legend>citation</legend>
+                        <h4>A reference for the dataset as a statement indicating how this data should be cited (attributed) when used.</h4>
+                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="citation" data-xsd2html2xml-xpath="/dataset/citation"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="A single citation for use when citing the dataset" /><span>A single citation for use when citing the dataset</span></label><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="identifier" data-xsd2html2xml-xpath="/dataset/citation/@identifier"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="A URI, DOI or other persistent identifier for the  citation" /><span>A URI, DOI or other persistent identifier for the citation</span></label>
+                    </fieldset>
+                </section>
+                <section>
+                	<label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="language" data-xsd2html2xml-xpath="/dataset/language"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The language in which the resource (not the metadata document) is written" /><span>The language in which the resource (not the metadata document) is written<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">language</button></section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="abstract" data-xsd2html2xml-xpath="/dataset/abstract">
+                        <legend>abstract</legend>
+                        <h4>A brief overview describing the dataset</h4>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="para" data-xsd2html2xml-xpath="/dataset/abstract/para">
+                                <legend>abstract <button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <section>
+                                	<div class="form-group">
+                                    <textarea class="form-control" rows="10" cols="100"></textarea>
+                                   </div>
+                                </section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">abstract</button>
+                        </section>
+                    </fieldset>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="keywordSet" data-xsd2html2xml-xpath="/dataset/keywordSet">
+                        <legend>keywordSet<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>A wrapper element for the keyword and keywordThesaurus elements</h4>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="keyword" data-xsd2html2xml-xpath="/dataset/keywordSet/keyword"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This field names a keyword or key phrase that concisely describes the resource or is related to the resource. Each keyword field should contain one and only one keyword" /><span>This field names a keyword or key phrase that concisely describes the resource or is related to the resource.<br>Each keyword field should contain one and only one keyword<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">keyword</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="keywordThesaurus" data-xsd2html2xml-xpath="/dataset/keywordSet/keywordThesaurus"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The name of the official keyword thesaurus from which keyword was derived" /><span>The name of the official keyword thesaurus from which keyword was derived</span></label></section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">keywordSet</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="additionalInfo" data-xsd2html2xml-xpath="/dataset/additionalInfo">
+                        <legend>additionalInfo<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>Any information that is not characterized by the other resource metadata fields</h4>
+                        <section>
+                            
+                                
+                            
+                                    <div class="form-group">
+                                    <textarea class="form-control" rows="10" cols="100"></textarea>
+                                   </div>
+                               
+                           
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">additionalInfo</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="intellectualRights" data-xsd2html2xml-xpath="/dataset/intellectualRights">
+                        <legend>intellectualRights<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>Contain a rights management statement for the resource, or reference a service providing such information.</h4>
+                        <section>
+                             <div class="form-group">
+                                    <textarea class="form-control" rows="10" cols="100"></textarea>
+                                   </div>
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">intellectualRights</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="distribution" data-xsd2html2xml-xpath="/dataset/distribution">
+                        <legend>distribution<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>This element provides information on how the resource is distributed.<br>When used at the resource level, this element can provide only general information, but elements for describing connections to online systems are provided.</h4>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="url" data-xsd2html2xml-xpath="/dataset/distribution/url"><input type="url" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="anyuri" data-xsd2html2xml-description="url" /><span>url</span></label></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="protocol" data-xsd2html2xml-xpath="/dataset/distribution/protocol"><select class="form-control" onchange="this.childNodes.forEach(function(o) { if (o.nodeType == Node.ELEMENT_NODE) o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-description="protocol">
+                                    <option value="OGC:WFS">OGC:WFS</option>
+                                    <option value="OGC:WCS">OGC:WCS</option>
+                                </select><span>protocol</span></label></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="name" data-xsd2html2xml-xpath="/dataset/distribution/name"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="name" /><span>name</span></label></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="description" data-xsd2html2xml-xpath="/dataset/distribution/description"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="description" /><span>description</span></label></section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">distribution</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="coverage" data-xsd2html2xml-xpath="/dataset/coverage">
+                        <legend>coverage<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>Describes the extent of the coverage of the resource in terms of its spatial extent, temporal extent, and taxonomic extent</h4>
+                        <label><input type="radio" name="idm47764253425088" required="required" onclick="clickRadioInput(this, 'idm47764253425088');" data-xsd2html2xml-description="1" /><span>1</span></label>
+                        <section data-xsd2html2xml-choice="true">
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="geographicCoverage" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage">
+                                <legend>geographicCoverage<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <h4>A container for spatial information about a resource; allows a bounding box for the overall coverage (in lat long), and also allows description of arbitrary polygons with exclusions.</h4>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="geographicDescription" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/geographicDescription"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="A short text description of a dataset's geographic areal domain. A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the &quot;boundingCoordinates&quot;." /><span>A short text description of a dataset's geographic areal domain.<br>A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the "boundingCoordinates".<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">geographicDescription</button></section>
+                                <section>
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="boundingCoordinates" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/boundingCoordinates">
+                                        <legend>boundingCoordinates</legend>
+                                        <p>Bounding Coordinates are the four margins (N, S, E, W) of a bounding box, or when considered in lat-lon pairs, the corners of the box.</p>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="westBoundingCoordinate" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/boundingCoordinates/westBoundingCoordinate"><input type="number" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" step="0.1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="decimal" data-xsd2html2xml-description="The westBoundingCoordinate field defines the longitude of the western-most point of the bounding box that is being described." /><span>The westBoundingCoordinate field defines the longitude of the western-most point of the bounding box that is being described.</span></label></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="eastBoundingCoordinate" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/boundingCoordinates/eastBoundingCoordinate"><input type="number" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" step="0.1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="decimal" data-xsd2html2xml-description="The eastBoundingCoordinate field defines the longitude of the eastern-most point of the bounding box that is being described." /><span>The eastBoundingCoordinate field defines the longitude of the eastern-most point of the bounding box that is being described.</span></label></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="northBoundingCoordinate" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/boundingCoordinates/northBoundingCoordinate"><input type="number" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" step="0.1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="decimal" data-xsd2html2xml-description="The northBoundingCoordinate field defines the latitude of the northern-most point of the bounding box that is being described." /><span>The northBoundingCoordinate field defines the latitude of the northern-most point of the bounding box that is being described.</span></label></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="southBoundingCoordinate" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/boundingCoordinates/southBoundingCoordinate"><input type="number" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" step="0.1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="decimal" data-xsd2html2xml-description="The southBoundingCoordinate field defines the latitude of the southern-most point of the bounding box that is being described." /><span>The southBoundingCoordinate field defines the latitude of the southern-most point of the bounding box that is being described.</span></label></section>
+                                    </fieldset>
+                                </section>
+                                
+                                	<section>
+                                		<label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="resolution" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/resolution"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="geographicResolution" /><span>geographicResolution</span></label></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/uncertainty"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="geographicUncertainty" /><span>geographicUncertainty</span>
+                                        </label>
+                                   </section>
+                              
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">geographicCoverage</button>
+                        </section><label><input type="radio" name="idm47764253425088" required="required" onclick="clickRadioInput(this, 'idm47764253425088');" data-xsd2html2xml-description="2" /><span>2</span></label>
+                        <section data-xsd2html2xml-choice="true">
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="temporalCoverage" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage">
+                                <legend>temporalCoverage<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <h4>This field specifies temporal coverage, and allows coverages to be a single point in time, multiple points in time, or a range of dates. </h4>
+                                <label><input type="radio" name="idm47764255950224" required="required" onclick="clickRadioInput(this, 'idm47764255950224');" data-xsd2html2xml-description="1" /><span>1</span></label>
+                                <section data-xsd2html2xml-choice="true">
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="rangeOfDates" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/rangeOfDates">
+                                        <legend>rangeOfDates</legend>
+                                        <p>The 'RangeOfDates' field is intended to be used for describing a range of dates and/or times. It may be used multiple times to document multiple date ranges. It allows for two 'singleDateTime' fields, the first to be used as the beginning dateTime, and the second to be used as the ending dateTime of the range.</p>
+                                        <section>
+                                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="beginDate" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/rangeOfDates/beginDate">
+                                                <legend>beginDate</legend>
+                                                <p>A single time stamp signifying the beginning of some time period</p>
+                                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="calendarDate" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/rangeOfDates/beginDate/calendarDate"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="" data-xsd2html2xml-description="The calendar date field is used to express a date, giving the year, month, and day. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12, where January = 01), and D is the two digit day of the month (01 - 31). This field can also be used to enter just the year portion of a date." /><span>The calendar date field is used to express a date, giving the year, month, and day. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12, where January = 01), and D is the two digit day of the month (01 - 31). This field can also be used to enter just the year portion of a date.</span></label></section>
+                                            </fieldset>
+                                        </section>
+                                        <section>
+                                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="endDate" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/rangeOfDates/endDate">
+                                                <legend>endDate</legend>
+                                                <p>A single time stamp signifying the end of some time period</p>
+                                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="calendarDate" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/rangeOfDates/endDate/calendarDate"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="" data-xsd2html2xml-description="The calendar date field is used to express a date, giving the year, month, and day. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12, where January = 01), and D is the two digit day of the month (01 - 31). This field can also be used to enter just the year portion of a date." /><span>The calendar date field is used to express a date, giving the year, month, and day. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12, where January = 01), and D is the two digit day of the month (01 - 31). This field can also be used to enter just the year portion of a date.</span></label></section>
+                                            </fieldset>
+                                        </section>
+                                    </fieldset>
+                                </section><label><input type="radio" name="idm47764255950224" required="required" onclick="clickRadioInput(this, 'idm47764255950224');" data-xsd2html2xml-description="2" /><span>2</span></label>
+                                <section data-xsd2html2xml-choice="true">
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="singleDateTime" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/singleDateTime">
+                                        <legend>singleDateTime</legend>
+                                        <p>The SingleDateTime field is intended to describe a single date and time for an event</p>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="calendarDate" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/singleDateTime/calendarDate"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="" data-xsd2html2xml-description="The calendar date field is used to express a date, giving the year, month, and day. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12, where January = 01), and D is the two digit day of the month (01 - 31). This field can also be used to enter just the year portion of a date." /><span>The calendar date field is used to express a date, giving the year, month, and day. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12, where January = 01), and D is the two digit day of the month (01 - 31). This field can also be used to enter just the year portion of a date.</span></label></section>
+                                    </fieldset>
+                                </section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="resolution" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/resolution"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="temporalResolution" /><span>temporalResolution</span></label></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/uncertainty"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="temporalUncertainty" /><span>temporalUncertainty</span></label></section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">temporalCoverage</button>
+                        </section><label><input type="radio" name="idm47764253425088" required="required" onclick="clickRadioInput(this, 'idm47764253425088');" data-xsd2html2xml-description="3" /><span>3</span></label>
+                        <section data-xsd2html2xml-choice="true">
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="taxonomicCoverage" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage">
+                                <legend>taxonomicCoverage<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <h4>Taxonomic Coverage is a container for taxonomic information about a resource. It includes a list of species names (or higher level ranks) from one or more classification systems.</h4>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="generalTaxonomicCoverage" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/generalTaxonomicCoverage"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="A general description of the range of taxa addressed in the data set or collection" /><span>A general description of the range of taxa addressed in the data set or collection<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">generalTaxonomicCoverage</button></section>
+                                <section>
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="taxonomicClassification" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/taxonomicClassification">
+                                        <legend>taxonomicClassification<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                        </legend>
+                                        <p>Information about the range of taxa addressed in the dataset or collection</p>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="taxonRankName" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/taxonomicClassification/taxonRankName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The name of the taxonomic rank for which the Taxon rank value is provided, e.g., Phylum, Class, Genus, Species" /><span>The name of the taxonomic rank for which the Taxon rank value is provided, e.g., Phylum, Class, Genus, Species<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">taxonRankName</button></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="taxonRankValue" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/taxonomicClassification/taxonRankValue"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The name representing the taxonomic rank of the taxon being described" /><span>The name representing the taxonomic rank of the taxon being described</span></label></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="commonName" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/taxonomicClassification/commonName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="Applicable common names; these common names may be general descriptions of a group of organisms if appropriate, e.g., invertebrates, waterfowl" /><span>Applicable common names; these common names may be general descriptions of a group of organisms if appropriate, e.g., invertebrates, waterfowl<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">commonName</button></section>
+                                    </fieldset>
+                                    <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">taxonomicClassification</button>
+                                </section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">taxonomicCoverage</button>
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">coverage</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="purpose" data-xsd2html2xml-xpath="/dataset/purpose">
+                        <legend>purpose<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>A description of the purpose of the resource/dataset</h4>
+                        <section>
+                            <div class="form-group">
+                                    <textarea class="form-control" rows="10" cols="100"></textarea>
+                                   </div>
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">purpose</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="maintenance" data-xsd2html2xml-xpath="/dataset/maintenance">
+                        <legend>maintenance<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="description" data-xsd2html2xml-xpath="/dataset/maintenance/description">
+                                <legend>description</legend>
+                                <p>The field Description contains general textual descriptions.</p>
+                                <section>
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="para" data-xsd2html2xml-xpath="/dataset/maintenance/description/para">
+                                        <legend>description <button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                        </legend>
+                                        <section>
+                                            <div class="form-group">
+                                    <textarea class="form-control" rows="10" cols="100"></textarea>
+                                   </div>
+                                        </section>
+                                    </fieldset>
+                                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">description</button>
+                                </section>
+                            </fieldset>
+                        </section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="maintenanceUpdateFrequency" data-xsd2html2xml-xpath="/dataset/maintenance/maintenanceUpdateFrequency"><select class="form-control" onchange="this.childNodes.forEach(function(o) { if (o.nodeType == Node.ELEMENT_NODE) o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-description="maintenanceUpdateFrequency">
+                                    <option value="annually">annually</option>
+                                    <option value="asNeeded">asNeeded</option>
+                                    <option value="biannually">biannually</option>
+                                    <option value="continually">continually</option>
+                                    <option value="daily">daily</option>
+                                    <option value="irregular">irregular</option>
+                                    <option value="monthly">monthly</option>
+                                    <option value="notPlanned">notPlanned</option>
+                                    <option value="weekly">weekly</option>
+                                    <option value="unkown">unkown</option>
+                                    <option value="otherMaintenancePeriod">otherMaintenancePeriod</option>
+                                </select><span>maintenanceUpdateFrequency</span></label></section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">maintenance</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="contact" data-xsd2html2xml-xpath="/dataset/contact">
+                        <legend>contact<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <label><input type="radio" name="idm47764250945888" required="required" onclick="clickRadioInput(this, 'idm47764250945888');" data-xsd2html2xml-description="1" /><span>1</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="organizationName" data-xsd2html2xml-xpath="/dataset/contact/organizationName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described." /><span>The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described.</span></label></section><label><input type="radio" name="idm47764250945888" required="required" onclick="clickRadioInput(this, 'idm47764250945888');" data-xsd2html2xml-description="2" /><span>2</span></label>
+                        <section data-xsd2html2xml-choice="true">
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="individualName" data-xsd2html2xml-xpath="/dataset/contact/individualName">
+                                <legend>individualName</legend>
+                                <p>The individualName field contains subfields so that a person's name can be broken down into parts.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="givenName" data-xsd2html2xml-xpath="/dataset/contact/individualName/givenName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). " /><span>The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">givenName</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="surName" data-xsd2html2xml-xpath="/dataset/contact/individualName/surName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The surname field is used for the last name of the individual associated with the resource. This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. " /><span>The surname field is used for the last name of the individual associated with the resource.<br> This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. </span></label></section>
+                            </fieldset>
+                        </section><label><input type="radio" name="idm47764250945888" required="required" onclick="clickRadioInput(this, 'idm47764250945888');" data-xsd2html2xml-description="3" /><span>3</span></label>
+                        <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="positionName" data-xsd2html2xml-xpath="/dataset/contact/positionName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This field is intended to be used instead of a particular person or full organization name. If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager." /><span>This field is intended to be used instead of a particular person or full organization name.<br>If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager.</span></label></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="address" data-xsd2html2xml-xpath="/dataset/contact/address">
+                                <legend>address<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The address field is a container for multiple subfields that describe the physical or electronic address of the responsible party for a resource.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="deliveryPoint" data-xsd2html2xml-xpath="/dataset/contact/address/deliveryPoint"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15" /><span>The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">deliveryPoint</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="city" data-xsd2html2xml-xpath="/dataset/contact/address/city"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The city field is used for the city name of the contact associated with a particular resource." /><span>The city field is used for the city name of the contact associated with a particular resource.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">city</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="administrativeArea" data-xsd2html2xml-xpath="/dataset/contact/address/administrativeArea"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas." /><span>The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">administrativeArea</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="postalCode" data-xsd2html2xml-xpath="/dataset/contact/address/postalCode"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. " /><span>The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">postalCode</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="country" data-xsd2html2xml-xpath="/dataset/contact/address/country"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The country field is used for the name of the contact's country." /><span>The country field is used for the name of the contact's country.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">country</button></section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">address</button>
+                        </section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="phone" data-xsd2html2xml-xpath="/dataset/contact/phone"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The phone field describes information about the responsible party's telephone, be it a voice phone, fax." /><span>The phone field describes information about the responsible party's telephone, be it a voice phone, fax.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">phone</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="electronicMailAddress" data-xsd2html2xml-xpath="/dataset/contact/electronicMailAddress"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The electronic mail address is the email address for the party. It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address." /><span>The electronic mail address is the email address for the party.<br>It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">electronicMailAddress</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="onlineUrl" data-xsd2html2xml-xpath="/dataset/contact/onlineUrl"><input type="url" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="anyuri" data-xsd2html2xml-description="A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party." /><span>A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">onlineUrl</button></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/contact/userId">
+                                <legend>userId<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/contact/userId"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="An identifier that links this party to a directory of personnel. Although specific contact information for a party might change, the underlying correspondence to a real individual does not.  This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party." /><span>An identifier that links this party to a directory of personnel.<br>Although specific contact information for a party might change, the underlying correspondence to a real individual does not.<br>This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party.</span></label><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="directory" data-xsd2html2xml-xpath="/dataset/contact/userId/@directory"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This attribute names the directory system to which this userId applies. This will generally be a URL that shows how to look up information, for example an LDAP url. However, it could also be a non-parsable description of the directory system if that is all that is available." /><span>This attribute names the directory system to which this userId applies.<br>This will generally be a URL that shows how to look up information, for example an LDAP url.<br>However, it could also be a non-parsable description of the directory system if that is all that is available.</span></label>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">userId</button>
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">contact</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="methods" data-xsd2html2xml-xpath="/dataset/methods">
+                        <legend>methods<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>The methods field documents scientific methods used in the collection of this dataset. It includes information on items such as tools, instrument calibration and software.</h4>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="methodDescription" data-xsd2html2xml-xpath="/dataset/methods/methodDescription">
+                                <legend>methodDescription<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>A broader description of how the method is produced.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="description" data-xsd2html2xml-xpath="/dataset/methods/methodDescription/description">
+                                	<textarea class="form-control" row="10" cols="100" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="description" /></textarea>
+                               </label></section>
+                                
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">methodDescription</button>
+                        </section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="datasetDependencies" data-xsd2html2xml-xpath="/dataset/methods/datasetDependencies"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken." /><span>A detailed listing of the input datasets needed to produce the dataset. The list (concatenated and separated) should contain names of people, groups, or organizations responsible for the original input. The primary creator should be listed first.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">datasetDependencies</button></section>
+                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="models" data-xsd2html2xml-xpath="/dataset/methods/models"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken." /><span>dataset models ...<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">models</button></section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="qualityControl" data-xsd2html2xml-xpath="/dataset/methods/qualityControl">
+                                <legend>qualityControl<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The qualityControl field provides a location for the description of actions taken<br>to either control or assess the quality of data resulting from the associated method step.</p>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="description" data-xsd2html2xml-xpath="/dataset/methods/qualityControl/description">
+                                	<textarea class="form-control" row="10" cols="100" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="description" /></textarea></label></section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">qualityControl</button>
+                        </section>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">methods</button>
+                </section>
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="project" data-xsd2html2xml-xpath="/dataset/project">
+                        <legend>project<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>The project field contains information on the project in which this dataset was collected. It includes information such as project personnel, funding, study area, project design and related projects.</h4>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="title" data-xsd2html2xml-xpath="/dataset/project/title">
+                                <legend>title</legend>
+                                <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="title" data-xsd2html2xml-xpath="/dataset/project/title"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The 'title' field provides a description of the resource that is being documented that is long enough to differentiate it from other similar resources. Multiple titles may be provided, particularly when trying to express the title in more than one language (use the &quot;xml:lang&quot; attribute to indicate the language if not English/en)." /><span>The 'title' field provides a description of the resource that is being documented that is long enough to differentiate it from other similar resources.<br>Multiple titles may be provided, particularly when trying to express the title in more than one language (use the "xml:lang" attribute to indicate the language if not English/en).</span></label>
+                            </fieldset>
+                        </section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="personnel" data-xsd2html2xml-xpath="/dataset/project/personnel">
+                                <legend>personnel<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <h4>The Personnel field extends ResponsibleParty with role information and is used to document people involved in a research project by providing contact information and their role in the project. </h4>
+                                <label><input type="radio" name="idm47764248402368" required="required" onclick="clickRadioInput(this, 'idm47764248402368');" data-xsd2html2xml-description="1" /><span>1</span></label>
+                                <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="organizationName" data-xsd2html2xml-xpath="/dataset/project/personnel/organizationName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described." /><span>The full name of the organization that is associated with the resource. This field is intended to describe which institution or overall organization is associated with the resource being described.</span></label></section><label><input type="radio" name="idm47764248402368" required="required" onclick="clickRadioInput(this, 'idm47764248402368');" data-xsd2html2xml-description="2" /><span>2</span></label>
+                                <section data-xsd2html2xml-choice="true">
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="individualName" data-xsd2html2xml-xpath="/dataset/project/personnel/individualName">
+                                        <legend>individualName</legend>
+                                        <p>The individualName field contains subfields so that a person's name can be broken down into parts.</p>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="givenName" data-xsd2html2xml-xpath="/dataset/project/personnel/individualName/givenName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). " /><span>The given name field can be used for first name of the individual associated with the resource, or for any other names that are not intended to be alphabetized, (as appropriate). <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">givenName</button></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="surName" data-xsd2html2xml-xpath="/dataset/project/personnel/individualName/surName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The surname field is used for the last name of the individual associated with the resource. This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. " /><span>The surname field is used for the last name of the individual associated with the resource.<br>This is typically the family name of an individual, for example, the name by which s/he is referred to in citations. </span></label></section>
+                                    </fieldset>
+                                </section><label><input type="radio" name="idm47764248402368" required="required" onclick="clickRadioInput(this, 'idm47764248402368');" data-xsd2html2xml-description="3" /><span>3</span></label>
+                                <section data-xsd2html2xml-choice="true"><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="positionName" data-xsd2html2xml-xpath="/dataset/project/personnel/positionName"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This field is intended to be used instead of a particular person or full organization name. If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager." /><span>This field is intended to be used instead of a particular person or full organization name.<br>If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager.</span></label></section>
+                                <section>
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="address" data-xsd2html2xml-xpath="/dataset/project/personnel/address">
+                                        <legend>address<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                        </legend>
+                                        <p>The address field is a container for multiple subfields that describe the physical or electronic address of the responsible party for a resource.</p>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="deliveryPoint" data-xsd2html2xml-xpath="/dataset/project/personnel/address/deliveryPoint"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15" /><span>The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">deliveryPoint</button></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="city" data-xsd2html2xml-xpath="/dataset/project/personnel/address/city"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The city field is used for the city name of the contact associated with a particular resource." /><span>The city field is used for the city name of the contact associated with a particular resource.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">city</button></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="administrativeArea" data-xsd2html2xml-xpath="/dataset/project/personnel/address/administrativeArea"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas." /><span>The administrative area field is the equivalent of a 'state' in the U.S., or Province in Canada. This field is intended to accommodate the many types of international administrative areas.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">administrativeArea</button></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="postalCode" data-xsd2html2xml-xpath="/dataset/project/personnel/address/postalCode"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. " /><span>The postal code is equivalent to a U.S. zip code, or the number used for routing to an international address. <button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">postalCode</button></section>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="country" data-xsd2html2xml-xpath="/dataset/project/personnel/address/country"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The country field is used for the name of the contact's country." /><span>The country field is used for the name of the contact's country.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">country</button></section>
+                                    </fieldset>
+                                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">address</button>
+                                </section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="phone" data-xsd2html2xml-xpath="/dataset/project/personnel/phone"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The phone field describes information about the responsible party's telephone, be it a voice phone, fax." /><span>The phone field describes information about the responsible party's telephone, be it a voice phone, fax.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">phone</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="electronicMailAddress" data-xsd2html2xml-xpath="/dataset/project/personnel/electronicMailAddress"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The electronic mail address is the email address for the party. It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address." /><span>The electronic mail address is the email address for the party.<br>It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">electronicMailAddress</button></section>
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="onlineUrl" data-xsd2html2xml-xpath="/dataset/project/personnel/onlineUrl"><input type="url" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="anyuri" data-xsd2html2xml-description="A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party." /><span>A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party.<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">onlineUrl</button></section>
+                                <section>
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/project/personnel/userId">
+                                        <legend>userId<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                        </legend>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="content" data-xsd2html2xml-name="userId" data-xsd2html2xml-xpath="/dataset/project/personnel/userId"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="An identifier that links this party to a directory of personnel. Although specific contact information for a party might change, the underlying correspondence to a real individual does not.  This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party." /><span>An identifier that links this party to a directory of personnel.<br>Although specific contact information for a party might change, the underlying correspondence to a real individual does not.<br>This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party.</span></label><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="directory" data-xsd2html2xml-xpath="/dataset/project/personnel/userId/@directory"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This attribute names the directory system to which this userId applies. This will generally be a URL that shows how to look up information, for example an LDAP url. However, it could also be a non-parsable description of the directory system if that is all that is available." /><span>This attribute names the directory system to which this userId applies.<br>This will generally be a URL that shows how to look up information, for example an LDAP url.<br>However, it could also be a non-parsable description of the directory system if that is all that is available.</span></label>
+                                    </fieldset>
+                                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">userId</button>
+                                </section>
+                                
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="role" data-xsd2html2xml-xpath="/dataset/project/personnel/role"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="Use this field to describe the role the party played with respect to the resource. Some potential roles include technician, reviewer, principal investigator, and many others." /><span>Use this field to describe the role the party played with respect to the resource. Some potential roles include technician, reviewer, principal investigator, and many others.</span></label></section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">personnel</button>
+                        </section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="abstract" data-xsd2html2xml-xpath="/dataset/project/abstract">
+                                <legend>abstract<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>A brief overview describing the dataset</p>
+                                <section>
+                                    <div class="form-group">
+                                    	<textarea class="form-control" rows="10" cols="100"></textarea>
+                                    </div>
+                                </section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">abstract</button>
+                        </section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="funding" data-xsd2html2xml-xpath="/dataset/project/funding">
+                                <legend>funding<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The funding field is used to provide information about funding sources for the project such as: grant and contract numbers; names and addresses of funding sources.</p>
+                                <section>
+                                    <div class="form-group">
+                                    	<textarea class="form-control" rows="10" cols="100"></textarea>
+                                    </div>
+                                    
+                                </section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">funding</button>
+                        </section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="studyAreaDescription" data-xsd2html2xml-xpath="/dataset/project/studyAreaDescription">
+                                <legend>studyAreaDescription<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <h4>The studyAreaDescription field documents the physical area associated with the research project. It can include descriptions of the geographic, temporal, and taxonomic coverage of the research location and descriptions of domains (themes) of interest such as climate, geology, soils or disturbances.</h4>
+                                <section>
+                                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="descriptor" data-xsd2html2xml-xpath="/dataset/project/studyAreaDescription/descriptor">
+                                        <legend>descriptor</legend>
+                                        <h4>The descriptor field is used to document domains (themes) of interest such as climate, geology, soils or disturbances.</h4>
+                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="descriptorValue" data-xsd2html2xml-xpath="/dataset/project/studyAreaDescription/descriptor/descriptorValue"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="The descriptorValue field contains a general description, either thematic or geographic, of the study area." /><span>The descriptorValue field contains a general description, either thematic or geographic, of the study area.</span></label></section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="citableClassificationSystem" data-xsd2html2xml-xpath="/dataset/project/studyAreaDescription/descriptor/@citableClassificationSystem"><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" pattern=".{0,}" data-xsd2html2xml-primitive="boolean" data-xsd2html2xml-description="citableClassificationSystem" /><span>citableClassificationSystem</span></label><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="name" data-xsd2html2xml-xpath="/dataset/project/studyAreaDescription/descriptor/@name"><select class="form-control" onchange="this.childNodes.forEach(function(o) { if (o.nodeType == Node.ELEMENT_NODE) o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" data-xsd2html2xml-description="name">
+                                                <option value="thematic">thematic</option>
+                                                <option value="geographic">geographic</option>
+                                                <option value="generic">generic</option>
+                                            </select><span>name</span></label>
+                                    </fieldset>
+                                </section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">studyAreaDescription</button>
+                        </section>
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="designDescription" data-xsd2html2xml-xpath="/dataset/project/designDescription">
+                                <legend>designDescription <button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The field designDescription contains general textual descriptions of research design.<br>It can include detailed accounts of goals, motivations, theory, hypotheses, strategy, statistical design, and actual work. </p>
+                               
+                                <section>
+                                   
+                                        
+                                        <textarea class="form-control" rows="10" cols="100"></textarea>
+                                    
+                                </section>
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">designDescription</button>
+                        </section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="attribute" data-xsd2html2xml-name="id" data-xsd2html2xml-xpath="/dataset/project/@id"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="A unique identifier for the project. This can be used to link multiple datasets that are associated in some way with the same project." /><span>A unique identifier for the project. This can be used to link multiple datasets that are associated in some way with the same project.</span></label>
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">project</button>
+                </section>
+            </fieldset>
+        </section>
+
+        </div>
+   
+</body>
+
+
+</html>
