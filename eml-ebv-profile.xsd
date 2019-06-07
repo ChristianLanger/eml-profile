@@ -7,8 +7,7 @@
   xmlns:dc="http://purl.org/dc/terms/">
   <xs:import namespace="eml://ecoinformatics.org/eml-2.1.1" schemaLocation="eml.xsd"/>
   <xs:import namespace="http://purl.org/dc/terms/" schemaLocation="dc.xsd"/>
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace"
-    schemaLocation="http://rs.gbif.org/schema/xml.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://rs.gbif.org/schema/xml.xsd"/>
   <xs:element name="dataset">
     <xs:annotation>
       <xs:documentation>The dataset element is a wrapper for all other elements relating to a single dataset</xs:documentation>
@@ -142,8 +141,7 @@
           <xs:annotation>
             <xs:documentation>A name of the Essential Biodiversity Variable, preferably in the domain of the GEO BON List of Essential Biodiversity Variables.</xs:documentation>
           </xs:annotation>
-        </xs:element>
-      
+        </xs:element>    
     </xs:sequence>
   </xs:complexType>
   
@@ -275,6 +273,16 @@
             <xs:documentation>A short text description of a dataset's geographic areal domain. A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the "boundingCoordinates".</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="resolution" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>geographicResolution</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="uncertainty" type="xs:string">
+		      <xs:annotation>
+		        <xs:documentation>geographicUncertainty</xs:documentation>
+		      </xs:annotation>
+		    </xs:element>
         <xs:element name="boundingCoordinates">
           <xs:annotation>
             <xs:documentation>Bounding Coordinates are the four margins (N, S, E, W) of a bounding box, or when considered in lat-lon pairs, the corners of the box.</xs:documentation>
@@ -301,16 +309,6 @@
                   <xs:documentation>The southBoundingCoordinate field defines the latitude of the southern-most point of the bounding box that is being described.</xs:documentation>
                 </xs:annotation>
               </xs:element>
-              <xs:element name="resolution" type="xs:string">
-                <xs:annotation>
-                  <xs:documentation>geographicResolution</xs:documentation>
-                </xs:annotation>
-              </xs:element>
-              <xs:element name="uncertainty" type="xs:string">
-		        <xs:annotation>
-		          <xs:documentation>geographicUncertainty</xs:documentation>
-		        </xs:annotation>
-		      </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -446,13 +444,15 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="title"/>
+        <xs:element ref="title">
+        </xs:element>
         <xs:element name="personnel" type="agentWithRoleType" maxOccurs="unbounded">
           <xs:annotation>
             <xs:documentation>The Personnel field extends ResponsibleParty with role information and is used to document people involved in a research project by providing contact information and their role in the project. </xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element minOccurs="0" ref="abstract"/>
+        <xs:element minOccurs="0" ref="abstract">
+        </xs:element>
         <xs:element name="funding" minOccurs="0">
           <xs:annotation>
             <xs:documentation>The funding field is used to provide information about funding sources for the project such as: grant and contract numbers; names and addresses of funding sources.</xs:documentation>
@@ -526,7 +526,7 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="ebv">
+              <xs:element name="gbif">
                 <xs:annotation>
                   <xs:documentation>A block of additional metadata used for some special GBIF purposes and crossmapping to other schemas like the TDWG Natural Collection Data (NCD) schema</xs:documentation>
                 </xs:annotation>
