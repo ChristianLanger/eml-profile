@@ -128,6 +128,9 @@
         <xs:enumeration value="OGC:WFS"/>
         <xs:enumeration value="OGC:WCS"/>
       </xs:restriction>
+      <xs:annotation>
+        <xs:documentation>The connection protocol to be used.</xs:documentation>
+        </xs:annotation>
     </xs:simpleType>
   
   <xs:complexType name="ebv">
@@ -156,15 +159,14 @@
         <xs:element ref="individualName"/>
         <xs:element name="positionName" type="NonEmptyStringType">
           <xs:annotation>
-            <xs:documentation>This field is intended to be used instead of a particular person or full organization name. If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., GBIF Data Manager.</xs:documentation>
+            <xs:documentation>This field is intended to be used instead of a particular person or full organization name. If the associated person who holds the role changes frequently, then Position Name would be used for consistency. E.g., Data Manager.</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
       <xs:element ref="address" minOccurs="0"/>
       <xs:element ref="phone" minOccurs="0"/>
-      <xs:element ref="electronicMailAddress" minOccurs="0"/>
-      <xs:element ref="onlineUrl" minOccurs="0"/>
-      <xs:element ref="userId" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="email" minOccurs="0"/>
+      <xs:element ref="homepage" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="agentWithRoleType">
@@ -191,11 +193,11 @@
       <xs:documentation>A legal document giving official permission to do something with the dataset.</xs:documentation>
     </xs:annotation>
   </xs:element>
-  <xs:element name="citation" type="xs:string">
+<!--   <xs:element name="citation" type="xs:string">
     <xs:annotation>
       <xs:documentation>Citation</xs:documentation>
     </xs:annotation>
-  </xs:element>
+  </xs:element> -->
   <xs:element name="language" type="NonEmptyStringType">
     <xs:annotation>
       <xs:documentation>The language in which the resource (not the metadata document) is written</xs:documentation>
@@ -255,11 +257,11 @@
       <xs:documentation>Describes the extent of the coverage of the resource in terms of its spatial extent, temporal extent, and taxonomic extent</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:choice maxOccurs="unbounded">
-        <xs:element ref="geographicCoverage" maxOccurs="1"/>
-        <xs:element ref="temporalCoverage" maxOccurs="1"/>
-        <xs:element ref="taxonomicCoverage" maxOccurs="1"/>
-      </xs:choice>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element ref="geographicCoverage" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="temporalCoverage" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="taxonomicCoverage" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="geographicCoverage">
@@ -417,22 +419,22 @@
       <xs:sequence>
         <xs:element name="methodDescription" type="description" maxOccurs="unbounded">
           <xs:annotation>
-            <xs:documentation>The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken.</xs:documentation>
+            <xs:documentation>A broader description of how the method is produced.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="datasetDependencies" type="xs:string" maxOccurs="unbounded">
           <xs:annotation>
-            <xs:documentation>The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken.</xs:documentation>
+            <xs:documentation>A detailed listing of the input datasets needed to produce the dataset. The list (concatenated and separated) should contain names of people, groups, or organizations responsible for the original input. The primary creator should be listed first.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="models" type="xs:string" maxOccurs="unbounded">
           <xs:annotation>
-            <xs:documentation>The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation, source data and any quality control measures taken.</xs:documentation>
+            <xs:documentation>dataset models...</xs:documentation>
           </xs:annotation>
         </xs:element>       
         <xs:element name="qualityControl" type="description" minOccurs="0" maxOccurs="unbounded">
           <xs:annotation>
-            <xs:documentation>The qualityControl field provides a location for the description of actions taken to either control or assess the quality of data resulting from the associated method step. </xs:documentation>
+            <xs:documentation>The qualityControl field provides a location for the description of actions taken to either control or assess the quality of data resulting from the associated method step.</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:sequence>
@@ -648,7 +650,7 @@
       <xs:extension base="NonEmptyStringType">
         <xs:attribute name="identifier" use="optional" type="xs:string">
           <xs:annotation>
-            <xs:documentation>A URI, DOI or other persistent identifier for the  citation</xs:documentation>
+            <xs:documentation>A URI, DOI or other persistent identifier for the citation</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -1240,7 +1242,7 @@
   </xs:element>
   <xs:element name="title" type="i18nString">
     <xs:annotation>
-      <xs:documentation>The 'title' field provides a description of the resource that is being documented that is long enough to differentiate it from other similar resources. Multiple titles may be provided, particularly when trying to express the title in more than one language (use the "xml:lang" attribute to indicate the language if not English/en).</xs:documentation>
+      <xs:documentation>The 'title' field provides a description of the resource that is being documented that is long enough to differentiate it from other similar resources. Multiple titles may be provided, particularly when trying to express the title in more than one language.</xs:documentation>
     </xs:annotation>
   </xs:element>
   <xs:element name="individualName">
@@ -1270,7 +1272,7 @@
       <xs:sequence>
         <xs:element name="deliveryPoint" type="NonEmptyStringType" minOccurs="0">
           <xs:annotation>
-            <xs:documentation>The delivery point field is used for the physical address for postal communication, e.g., GBIF Secretariat, Universitetsparken 15</xs:documentation>
+            <xs:documentation>The delivery point field is used for the physical address for postal communication, e.g., GEO BON Secretariat, Deutscher Platz 5e</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="city" type="NonEmptyStringType" minOccurs="0">
@@ -1301,31 +1303,15 @@
       <xs:documentation>The phone field describes information about the responsible party's telephone, be it a voice phone, fax.</xs:documentation>
     </xs:annotation>
   </xs:element>
-  <xs:element name="electronicMailAddress" type="NonEmptyStringType">
+  <xs:element name="email" type="NonEmptyStringType">
     <xs:annotation>
       <xs:documentation>The electronic mail address is the email address for the party. It is intended to be an Internet SMTP email address, which should consist of a username followed by the @ symbol, followed by the email server domain name address.</xs:documentation>
     </xs:annotation>
   </xs:element>
-  <xs:element name="onlineUrl" type="xs:anyURI">
+  <xs:element name="homepage" type="xs:anyURI">
     <xs:annotation>
       <xs:documentation>A link to associated online information, usually a web site. When the party represents an organization, this is the URL to a website or other online information about the organization. If the party is an individual, it might be their personal web site or other related online information about the party.</xs:documentation>
     </xs:annotation>
-  </xs:element>
-  <xs:element name="userId">
-    <xs:annotation>
-      <xs:documentation>An identifier that links this party to a directory of personnel. Although specific contact information for a party might change, the underlying correspondence to a real individual does not.  This identifier provides a pointer within a personnel directory that may contain further, and possibly more current, information about the party.</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="NonEmptyStringType">
-          <xs:attribute name="directory" use="required" type="NonEmptyStringType">
-            <xs:annotation>
-              <xs:documentation>This attribute names the directory system to which this userId applies. This will generally be a URL that shows how to look up information, for example an LDAP url. However, it could also be a non-parsable description of the directory system if that is all that is available.</xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
   </xs:element>
   <xs:element name="role" type="xs:string">
     <xs:annotation>
@@ -1350,8 +1336,21 @@
       <xs:sequence>
         <xs:element name="url" type="xs:anyURI"/>
         <xs:element name="protocol" type="protocol"/>
-        <xs:element name="name" type="xs:string"/>
-        <xs:element name="description" type="xs:string"/>
+        <xs:element name="name" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The name of the online resource.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="description" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>A detailed text description of what the online resource is/does.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="para"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
