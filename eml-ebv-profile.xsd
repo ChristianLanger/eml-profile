@@ -270,10 +270,16 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="geographicDescription" type="NonEmptyStringType" minOccurs="1">
+        <xs:element name="geographicDescription" minOccurs="1">
           <xs:annotation>
-            <xs:documentation>A short text description of a dataset's geographic areal domain. A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the "boundingCoordinates".</xs:documentation>
+            <xs:documentation>A short text description of a dataset's geographic areal domain. A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the "boundingCoordinates".
+            </xs:documentation>
           </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="para" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
         </xs:element>
         <xs:element name="resolution" type="xs:string">
           <xs:annotation>
@@ -365,7 +371,8 @@
   </xs:element>
   <xs:element name="taxonomicCoverage">
     <xs:annotation>
-      <xs:documentation>Taxonomic Coverage is a container for taxonomic information about a resource. It includes a list of species names (or higher level ranks) from one or more classification systems.</xs:documentation>
+      <xs:documentation>Taxonomic Coverage is a container for taxonomic information about a resource. It includes a list of species names (or higher level ranks) from one or more classification systems.
+      </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
