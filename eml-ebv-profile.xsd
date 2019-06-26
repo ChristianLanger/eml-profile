@@ -266,7 +266,7 @@
   </xs:element>
   <xs:element name="geographicCoverage">
     <xs:annotation>
-      <xs:documentation>A container for spatial information about a resource; allows a bounding box for the overall coverage (in lat long), and also allows description of arbitrary polygons with exclusions.</xs:documentation>
+      <xs:documentation>A container for spatial information about a resource (e.g. of grid cells, sampling locations, satellites, etc.) allows a bounding box for the overall coverage (in lat long), and also allows description of arbitrary polygons with exclusions.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -283,12 +283,12 @@
         </xs:element>
         <xs:element name="resolution" type="xs:string">
           <xs:annotation>
-            <xs:documentation>geographicResolution</xs:documentation>
+            <xs:documentation>Spatial resolution (e.g. grid cell size, polygons, resolution of satellite sensors, volume, etc.)</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="uncertainty" type="xs:string">
 		      <xs:annotation>
-		        <xs:documentation>geographicUncertainty</xs:documentation>
+		        <xs:documentation>Precision and accuracy of coordinates and volumes, wrongly recorded coordinates, imprecise sampling locations</xs:documentation>
 		      </xs:annotation>
 		    </xs:element>
         <xs:element name="boundingCoordinates">
@@ -326,7 +326,7 @@
 
   <xs:element name="temporalCoverage">
     <xs:annotation>
-      <xs:documentation>This field specifies temporal coverage, and allows coverages to be a single point in time, multiple points in time, or a range of dates. </xs:documentation>
+      <xs:documentation>This field specifies temporal coverage (e.g. length of time series, continuos recording, time period of collection of records, etc.), and allows coverages to be a single point in time or a range of dates.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
 	  <xs:sequence>
@@ -358,12 +358,12 @@
       </xs:choice>
       <xs:element name="resolution" type="xs:string">
 	        <xs:annotation>
-	          <xs:documentation>temporalResolution</xs:documentation>
+	          <xs:documentation>Temporal grain (e.g. date or time window of sampling, sampling frequency)</xs:documentation>
 	        </xs:annotation>
 	      </xs:element>
 	      <xs:element name="uncertainty" type="xs:string">
 	        <xs:annotation>
-	          <xs:documentation>temporalUncertainty</xs:documentation>
+	          <xs:documentation>Variation in length of time series, precision of time of collection, etc.</xs:documentation>
 	        </xs:annotation>
 	      </xs:element>
 	  </xs:sequence>
@@ -371,7 +371,7 @@
   </xs:element>
   <xs:element name="taxonomicCoverage">
     <xs:annotation>
-      <xs:documentation>Taxonomic Coverage is a container for taxonomic information about a resource. It includes a list of species names (or higher level ranks) from one or more classification systems.
+      <xs:documentation>Taxonomic Coverage (e.g. how many and which species are documented) is a container for taxonomic information about a resource. It includes a list of species names (or higher level ranks) from one or more classification systems.
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -379,6 +379,11 @@
         <xs:element name="generalTaxonomicCoverage" type="NonEmptyStringType" minOccurs="0">
           <xs:annotation>
             <xs:documentation>A general description of the range of taxa addressed in the data set or collection</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="uncertainty" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Identification and observation uncertainty, ambiguous scientific names, synonyms, differences in taxon concepts, etc.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="taxonomicClassification" maxOccurs="unbounded">
