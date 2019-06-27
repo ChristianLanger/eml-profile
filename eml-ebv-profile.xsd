@@ -286,9 +286,9 @@
             <xs:documentation>Spatial resolution (e.g. grid cell size, polygons, resolution of satellite sensors, volume, etc.)</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="MeasurementUnits" type="xs:string">
+        <xs:element name="measurementUnit" type="xs:string">
           <xs:annotation>
-            <xs:documentation>e.g. Merters, Kilometers, Degree </xs:documentation>
+            <xs:documentation>Meters, cubic meters, kilometers, degrees, etc.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="uncertainty" type="xs:string">
@@ -366,14 +366,14 @@
 	          <xs:documentation>Temporal grain (e.g. date or time window of sampling, sampling frequency)</xs:documentation>
 	        </xs:annotation>
 	      </xs:element>
-        <xs:element name="MeasurementUnits" type="xs:string">
+        <xs:element name="measurementUnit" type="xs:string">
           <xs:annotation>
-            <xs:documentation>e.g. Hours, Day, Year</xs:documentation>
+            <xs:documentation>Hours, days, weeks, months, years, decades, etc.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="MeasurementBaseline" type="xs:string">
+        <xs:element name="measurementBaseline" type="xs:string">
           <xs:annotation>
-            <xs:documentation>e.g. 1900</xs:documentation>
+            <xs:documentation>The baseline year on which the measurement was made (Recommended best practice is to use a date that conforms to ISO 8601:2004(E), e.g. 1900)</xs:documentation>
           </xs:annotation>
         </xs:element>
 	      <xs:element name="uncertainty" type="xs:string">
@@ -396,9 +396,9 @@
             <xs:documentation>A general description of the range of taxa addressed in the data set or collection</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="MeasurementUnits" type="xs:string">
+        <xs:element name="measurementUnit" type="xs:string">
           <xs:annotation>
-            <xs:documentation>Taxonomic entity for which species distribution and abundance data are sampled</xs:documentation>
+            <xs:documentation>Taxonomic entity for which species distribution and abundance data are sampled.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="uncertainty" type="xs:string">
