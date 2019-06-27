@@ -286,6 +286,11 @@
             <xs:documentation>Spatial resolution (e.g. grid cell size, polygons, resolution of satellite sensors, volume, etc.)</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="MeasurementUnits" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>e.g. Merters, Kilometers, Degree </xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="uncertainty" type="xs:string">
 		      <xs:annotation>
 		        <xs:documentation>Precision and accuracy of coordinates and volumes, wrongly recorded coordinates, imprecise sampling locations</xs:documentation>
@@ -361,6 +366,16 @@
 	          <xs:documentation>Temporal grain (e.g. date or time window of sampling, sampling frequency)</xs:documentation>
 	        </xs:annotation>
 	      </xs:element>
+        <xs:element name="MeasurementUnits" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>e.g. Hours, Day, Year</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="MeasurementBaseline" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>e.g. 1900</xs:documentation>
+          </xs:annotation>
+        </xs:element>
 	      <xs:element name="uncertainty" type="xs:string">
 	        <xs:annotation>
 	          <xs:documentation>Variation in length of time series, precision of time of collection, etc.</xs:documentation>
@@ -379,6 +394,11 @@
         <xs:element name="generalTaxonomicCoverage" type="NonEmptyStringType" minOccurs="0">
           <xs:annotation>
             <xs:documentation>A general description of the range of taxa addressed in the data set or collection</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="MeasurementUnits" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Taxonomic entity for which species distribution and abundance data are sampled</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="uncertainty" type="xs:string">
