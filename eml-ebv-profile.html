@@ -60,15 +60,22 @@
     fieldset {
         padding: 30px;
         display:inline-block;
-        background-color: #f3f3f3;
+        background-color: #ebebeb;
         border: 1px solid #c3c3c3;
         border-radius: 10px;
     }
+
+    fieldset > section > fieldset > section > fieldset,
+    fieldset > section > fieldset > section > fieldset > fieldset {
+        background-color: #e0e0e0;
+    }
+
 
     legend {
         color: #038c7c;
         font-size: 25px;
     }
+
 
     button {
         color: #333;
@@ -704,7 +711,7 @@
     <hr>
     
         <section>
-            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="dataset" data-xsd2html2xml-xpath="/dataset" style="background-color:#fff">
+            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="dataset" data-xsd2html2xml-xpath="/dataset" style="background-color:#f3f3f3">
                 <legend>dataset</legend>
                 <h4>The dataset element is a wrapper for all other elements relating to a single dataset</h4>
                 <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="alternateIdentifier" data-xsd2html2xml-xpath="/dataset/alternateIdentifier"><b>alternateIdentifier</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="This is the only identifier issued by the EBV resource for the metadata document; it is a UUID" /><span>This is the only identifier issued by the EBV resource for the metadata document; it is a UUID<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">alternateIdentifier</button></section>
@@ -1006,13 +1013,6 @@
                                     <textarea type="text" rows="10" cols="100" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="A short text description of a dataset's geographic areal domain. A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the &quot;boundingCoordinates&quot;."></textarea>
                                     <span>A short text description of a dataset's geographic areal domain.<br>A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the "boundingCoordinates".<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">geographicDescription</button></section>
 
-                                    <section>
-                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementUnit" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/measurementUnit"><b>measurementUnit</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementUnit" /><span>Meters, cubic meters, kilometers, degrees, etc.</span></label></section>
-                                    <section>
-                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="resolution" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/resolution"><b>resolution</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="geographicResolution" /><span>Spatial resolution (e.g. grid cell size, polygons, resolution of satellite sensors, volume, etc.)</span></label></section>
-                                        <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/uncertainty"><b>uncertainty</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="geographicUncertainty" /><span>Precision and accuracy of coordinates and volumes, wrongly recorded coordinates, imprecise sampling locations</span>
-                                        </label>
-                                   </section>
 
                                 <section>
                                     <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="boundingCoordinates" data-xsd2html2xml-xpath="/dataset/coverage/geographicCoverage/boundingCoordinates">
@@ -1064,11 +1064,7 @@
                                         <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="calendarDate" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/singleDateTime/calendarDate"><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="" data-xsd2html2xml-description="The calendar date field is used to express a date, giving the year, month, and day. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12, where January = 01), and D is the two digit day of the month (01 - 31). This field can also be used to enter just the year portion of a date." /><span>The SingleDateTime field is intended to describe a single date and time for an event.</span></label></section>
                                     </fieldset>
                                 </section>
-                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="resolution" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/resolution"><b>resolution</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="resolution" /><span>Temporal grain (e.g. date or time window of sampling, sampling frequency)</span></label></section>
-                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementUnit" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/measurementUnit"><b>measurementUnit</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementUnit" /><span>Hours, days, weeks, months, years, decades, etc.</span></label></section>
-                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementBaseline" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/measurementBaseline"><b>measurementBaseline</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementBaseline" /><span>The baseline year on which the measurement was made (Recommended best practice is to use a date that conforms to ISO 8601:2004(E), e.g. 1900)</span></label></section>
-                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/coverage/temporalCoverage/uncertainty"><b>uncertainty</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="uncertainty" /><span>Variation in length of time series, precision of time of collection, etc.</span></label></section>
-
+                                
                             </fieldset>
                             <button type="button" class="add" data-xsd2html2xml-min="1" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">temporalCoverage</button>
                         </section>
@@ -1081,8 +1077,7 @@
                                 <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="generalTaxonomicCoverage" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/generalTaxonomicCoverage"><b>generalTaxonomicCoverage</b>
                                     <textarea type="text" rows="10" cols="100" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="[\s]*[\S][\s\S]*" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="A general description of the range of taxa addressed in the data set or collection" ></textarea>
                                     <span>A general description of the range of taxa addressed in the data set or collection<button type="button" class="remove" onclick="clickRemoveButton(this);"></button></span></label><button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">generalTaxonomicCoverage</button></section>
-                                    <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementUnit" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/measurementUnit"><b>measurementUnit</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementUnit" /><span>Taxonomic entity for which species distribution and abundance data are sampled.</span></label></section>
-                                    <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/uncertainty"><b>uncertainty</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="uncertainty" /><span>Identification and observation uncertainty, ambiguous scientific names, synonyms, differences in taxon concepts, etc.</span></label></section>
+                                   
                                 <section>
                                     <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="taxonomicClassification" data-xsd2html2xml-xpath="/dataset/coverage/taxonomicCoverage/taxonomicClassification">
                                         <legend>taxonomicClassification<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
@@ -1100,6 +1095,116 @@
                     </fieldset>
                     <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">coverage</button>
                 </section>
+
+                <!-- layers -->
+                <section>
+                    <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="layers" data-xsd2html2xml-xpath="/dataset/layers" hidden>
+                        <legend>layers
+                            <button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                        </legend>
+                        <h4>Describes the layers of the resource in terms of the spatial, temporal and taxonomic extent of each layer incl. the measurement type of the layer.</h4>
+
+                        <section>
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="layer" data-xsd2html2xml-xpath="/dataset/layers/layer" hidden>
+                                <legend>layer<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
+                                </legend>
+                                <p>The layer field is a container that describe the layer for a resource.</p>
+
+                                <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementType" data-xsd2html2xml-xpath="/dataset/layers/layer/measurementType"><b>measurementType</b><select class="form-control" onchange="this.childNodes.forEach(function(o) { if (o.nodeType == Node.ELEMENT_NODE) o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-description="State: an absolute measurement on the condition and status of aspects of biodiversity; RelativeState: a measurement of aspects of biodiversity relative to a spatial (??) or temporal reference, such as a arbitrary area or baseline; Pressure: A measurement of a proximate cause of biodiversity change, such as fire, flood, etc; Benefit: Ecosystem service variables">
+                                    <option value="State">State</option>
+                                    <option value="RelativeState">RelativeState</option>
+                                    <option value="Pressure">Pressure</option>
+                                    <option value="Benefit">Benefit</option>
+                                </select><span><b>State:</b> an absolute measurement on the condition and status of aspects of biodiversity;<br><b>RelativeState:</b> a measurement of aspects of biodiversity relative to a spatial (??) or temporal reference, such as a arbitrary area or baseline;<br><b>Pressure:</b> A measurement of a proximate cause of biodiversity change, such as fire, flood, etc;<br><b>Benefit:</b> Ecosystem service variables</span></label>
+                            </section>
+
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="geographic" data-xsd2html2xml-xpath="/dataset/layers/layer/geographic">
+                                <legend>geographic
+                                </legend>
+                                <h4>A container for spatial information about a layer (e.g. of grid cells, sampling locations, satellites, etc.).</h4>
+                                
+
+                                    <section>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="resolution" data-xsd2html2xml-xpath="/dataset/layers/layer/geographic/resolution"><b>resolution</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="resolution" /><span>Spatial resolution (e.g. grid cell size, polygons, resolution of satellite sensors, volume, etc.)</span></label>
+                                    </section>
+
+                                    <section>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementUnit" data-xsd2html2xml-xpath="/dataset/layers/layer/geographic/measurementUnit"><b>measurementUnit</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementUnit" /><span>Meters, cubic meters, kilometers, degrees, etc.</span></label>
+                                    </section>
+
+                                    <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/layers/layer/geographic/uncertainty"><b>uncertainty</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="uncertainty" /><span>Precision and accuracy of coordinates and volumes, wrongly recorded coordinates, imprecise sampling locations</span>
+                                        </label>
+                                   </section>
+                                
+                                    
+                              
+                            </fieldset>
+
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="temporal" data-xsd2html2xml-xpath="/dataset/layers/layer/temporal">
+                                <legend>temporal
+                                </legend>
+                                <h4>A container for temporal information about a layer (e.g. length of time series, continuos recording, time period of collection of records, etc.)</h4>
+                                
+
+                                    <section>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="resolution" data-xsd2html2xml-xpath="/dataset/layers/layer/temporal/resolution"><b>resolution</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="resolution" /><span>Temporal grain (e.g. date or time window of sampling, sampling frequency)</span></label>
+                                    </section>
+
+                                    <section>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementUnit" data-xsd2html2xml-xpath="/dataset/layers/layer/temporal/measurementUnit"><b>measurementUnit</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementUnit" /><span>e.g. Hours, days, weeks, months, years, decades, etc.</span></label>
+                                    </section>
+
+                                    <section>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementBaseline" data-xsd2html2xml-xpath="/dataset/layers/layer/temporal/measurementBaseline"><b>measurementBaseline</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementBaseline" /><span>The baseline year on which the measurement was made (Recommended best practice is to use a date that conforms to ISO 8601:2004(E), e.g. 1900)</span></label>
+                                    </section>
+
+                                    <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/layers/layer/temporal/uncertainty"><b>uncertainty</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="uncertainty" /><span>Variation in length of time series, precision of time of collection, etc.</span>
+                                        </label>
+                                   </section>
+                                
+                                    
+                              
+                            </fieldset>
+
+
+                            <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="taxonomic" data-xsd2html2xml-xpath="/dataset/layers/layer/taxonomic">
+                                <legend>taxonomic
+                                </legend>
+                                <h4>A container for temporal information about a layer (e.g. how many and which species are documented).</h4>
+                                
+
+                                    <section>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="resolution" data-xsd2html2xml-xpath="/dataset/layers/layer/taxonomic/resolution"><b>resolution</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="resolution" /><span>e.g. Species, genus, higher taxonomic level, etc.</span></label>
+                                    </section>
+
+                                    <section>
+                                        <label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="measurementUnit" data-xsd2html2xml-xpath="/dataset/layers/layer/taxonomic/measurementUnit"><b>measurementUnit</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="measurementUnit" /><span>Taxonomic entity for which species distribution and abundance data are sampled.</span></label>
+                                    </section>
+
+
+                                    <section><label data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="uncertainty" data-xsd2html2xml-xpath="/dataset/layers/layer/taxonomic/uncertainty"><b>uncertainty</b><input type="text" class="form-control" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="string" data-xsd2html2xml-description="uncertainty" /><span>Identification and observation uncertainty, ambiguous scientific names, synonyms, differences in taxon concepts, etc.</span>
+                                        </label>
+                                   </section>
+                                
+                                    
+                              
+                            </fieldset>
+                               
+                                
+                                
+                                
+                               
+                            </fieldset>
+                            <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="unbounded" onclick="clickAddButton(this);">layer</button>
+                        </section>
+
+                        
+                    </fieldset>
+                    <button type="button" class="add" data-xsd2html2xml-min="0" data-xsd2html2xml-max="1" onclick="clickAddButton(this);">layers</button>
+                </section>
+
+
+
                 <section>
                     <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="purpose" data-xsd2html2xml-xpath="/dataset/purpose">
                         <legend>purpose<button type="button" class="remove" onclick="clickRemoveButton(this);"></button>
