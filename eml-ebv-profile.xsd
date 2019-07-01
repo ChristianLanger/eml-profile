@@ -41,6 +41,13 @@
         <xs:element ref="intellectualRights" minOccurs="0"/>
         <xs:element ref="distribution" minOccurs="0"/>
         <xs:element ref="coverage" minOccurs="0"/>
+        <xs:element name="layers" minOccurs="0"> 
+	      <xs:complexType>
+            <xs:sequence>
+              <xs:element name="layer" type="layer" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>    
+		</xs:element>
         <xs:element ref="purpose" minOccurs="0"/>
         <xs:element minOccurs="0" name="maintenance">
           <xs:complexType>
@@ -123,6 +130,18 @@
       </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="measurementType">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="State"/>
+        <xs:enumeration value="RelativeState"/>
+        <xs:enumeration value="Pressure"/>
+        <xs:enumeration value="Benefit"/>
+      </xs:restriction>
+      <xs:annotation>
+        <xs:documentation>State: an absolute measurement on the condition and status of aspects of biodiversity; RelativeState: a measurement of aspects of biodiversity relative to a spatial (??) or temporal reference, such as a arbitrary area or baseline; Pressure: A measurement of a proximate cause of biodiversity change, such as fire, flood, etc; Benefit: Ecosystem service variables</xs:documentation>
+        </xs:annotation>
+    </xs:simpleType>
+
     <xs:simpleType name="protocol">
       <xs:restriction base="xs:string">
         <xs:enumeration value="OGC:WFS"/>
@@ -145,6 +164,80 @@
             <xs:documentation>A name of the Essential Biodiversity Variable, preferably in the domain of the GEO BON List of Essential Biodiversity Variables.</xs:documentation>
           </xs:annotation>
         </xs:element>    
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="layer">
+    <xs:sequence>
+    	<xs:element name="measurementType" type="measurementType"></xs:element>   	
+   	  	<xs:element name="geographic" minOccurs="0">
+	   	  	<xs:complexType>
+			      <xs:sequence>
+			    	<xs:element name="resolution" type="xs:string"> 
+			          <xs:annotation>
+			            <xs:documentation>Spatial resolution (e.g. grid cell size, polygons, resolution of satellite sensors, volume, etc.)</xs:documentation>
+			          </xs:annotation>
+			        </xs:element>
+			        <xs:element name="measurementUnit" type="xs:string">
+			          <xs:annotation>
+			            <xs:documentation>e.g. Meters, cubic meters, kilometers, degrees, etc.</xs:documentation>
+			          </xs:annotation>
+			        </xs:element>
+			        <xs:element name="uncertainty" type="xs:string">
+				      <xs:annotation>
+				        <xs:documentation>Precision and accuracy of coordinates and volumes, wrongly recorded coordinates, imprecise sampling locations</xs:documentation>
+				      </xs:annotation>
+				    </xs:element>
+			    </xs:sequence>
+		  	</xs:complexType>
+	  	</xs:element>
+	  	<xs:element name="temporal" minOccurs="0">
+		  	<xs:complexType>
+		    <xs:sequence>
+			    <xs:element name="resolution" type="xs:string">
+			        <xs:annotation>
+			          <xs:documentation>Temporal grain (e.g. date or time window of sampling, sampling frequency)</xs:documentation>
+			        </xs:annotation>
+			      </xs:element>
+		        <xs:element name="measurementUnit" type="xs:string">
+		          <xs:annotation>
+		            <xs:documentation>e.g. Hours, days, weeks, months, years, decades, etc.</xs:documentation>
+		          </xs:annotation>
+		        </xs:element>
+		        <xs:element name="measurementBaseline" type="xs:string">
+		          <xs:annotation>
+		            <xs:documentation>The baseline year on which the measurement was made (Recommended best practice is to use a date that conforms to ISO 8601:2004(E), e.g. 1900)</xs:documentation>
+		          </xs:annotation>
+		        </xs:element>
+			      <xs:element name="uncertainty" type="xs:string">
+			        <xs:annotation>
+			          <xs:documentation>Variation in length of time series, precision of time of collection, etc.</xs:documentation>
+			        </xs:annotation>
+		      	</xs:element>
+		    </xs:sequence>
+		  </xs:complexType>
+	  </xs:element>
+	  <xs:element name="taxonomic" minOccurs="0">
+		  <xs:complexType>
+		    <xs:sequence>
+		    	<xs:element name="resolution" type="xs:string">
+			        <xs:annotation>
+			          <xs:documentation>e.g. Species, genus, higher taxonomic level, etc. </xs:documentation>
+			        </xs:annotation>
+			      </xs:element>
+			    <xs:element name="measurementUnit" type="xs:string">
+		          <xs:annotation>
+		            <xs:documentation>Taxonomic entity for which species distribution and abundance data are sampled.</xs:documentation>
+		          </xs:annotation>
+		        </xs:element>
+		        <xs:element name="uncertainty" type="xs:string">
+		          <xs:annotation>
+		            <xs:documentation>Identification and observation uncertainty, ambiguous scientific names, synonyms, differences in taxon concepts, etc.</xs:documentation>
+		          </xs:annotation>
+		        </xs:element>
+		    </xs:sequence>
+		  </xs:complexType>
+	</xs:element>
     </xs:sequence>
   </xs:complexType>
   
@@ -266,36 +359,15 @@
   </xs:element>
   <xs:element name="geographicCoverage">
     <xs:annotation>
-      <xs:documentation>A container for spatial information about a resource (e.g. of grid cells, sampling locations, satellites, etc.) allows a bounding box for the overall coverage (in lat long), and also allows description of arbitrary polygons with exclusions.</xs:documentation>
+      <xs:documentation>A container for spatial information about a resource; allows a bounding box for the overall coverage (in lat long), and also allows description of arbitrary polygons with exclusions.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="geographicDescription" minOccurs="1">
+        <xs:element name="geographicDescription" type="NonEmptyStringType" minOccurs="1">
           <xs:annotation>
-            <xs:documentation>A short text description of a dataset's geographic areal domain. A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the "boundingCoordinates".
-            </xs:documentation>
-          </xs:annotation>
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element ref="para" maxOccurs="unbounded"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="resolution" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>Spatial resolution (e.g. grid cell size, polygons, resolution of satellite sensors, volume, etc.)</xs:documentation>
+            <xs:documentation>A short text description of a dataset's geographic areal domain. A text description is especially important to provide a geographic setting when the extent of the dataset cannot be well described by the "boundingCoordinates".</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="measurementUnit" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>Meters, cubic meters, kilometers, degrees, etc.</xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        <xs:element name="uncertainty" type="xs:string">
-		      <xs:annotation>
-		        <xs:documentation>Precision and accuracy of coordinates and volumes, wrongly recorded coordinates, imprecise sampling locations</xs:documentation>
-		      </xs:annotation>
-		    </xs:element>
         <xs:element name="boundingCoordinates">
           <xs:annotation>
             <xs:documentation>Bounding Coordinates are the four margins (N, S, E, W) of a bounding box, or when considered in lat-lon pairs, the corners of the box.</xs:documentation>
@@ -322,6 +394,16 @@
                   <xs:documentation>The southBoundingCoordinate field defines the latitude of the southern-most point of the bounding box that is being described.</xs:documentation>
                 </xs:annotation>
               </xs:element>
+              <xs:element name="resolution" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>geographicResolution</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="uncertainty" type="xs:string">
+		        <xs:annotation>
+		          <xs:documentation>geographicUncertainty</xs:documentation>
+		        </xs:annotation>
+		      </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -331,7 +413,7 @@
 
   <xs:element name="temporalCoverage">
     <xs:annotation>
-      <xs:documentation>This field specifies temporal coverage (e.g. length of time series, continuos recording, time period of collection of records, etc.), and allows coverages to be a single point in time or a range of dates.</xs:documentation>
+      <xs:documentation>This field specifies temporal coverage, and allows coverages to be a single point in time, multiple points in time, or a range of dates. </xs:documentation>
     </xs:annotation>
     <xs:complexType>
 	  <xs:sequence>
@@ -363,22 +445,12 @@
       </xs:choice>
       <xs:element name="resolution" type="xs:string">
 	        <xs:annotation>
-	          <xs:documentation>Temporal grain (e.g. date or time window of sampling, sampling frequency)</xs:documentation>
+	          <xs:documentation>temporalResolution</xs:documentation>
 	        </xs:annotation>
 	      </xs:element>
-        <xs:element name="measurementUnit" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>Hours, days, weeks, months, years, decades, etc.</xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        <xs:element name="measurementBaseline" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>The baseline year on which the measurement was made (Recommended best practice is to use a date that conforms to ISO 8601:2004(E), e.g. 1900)</xs:documentation>
-          </xs:annotation>
-        </xs:element>
 	      <xs:element name="uncertainty" type="xs:string">
 	        <xs:annotation>
-	          <xs:documentation>Variation in length of time series, precision of time of collection, etc.</xs:documentation>
+	          <xs:documentation>temporalUncertainty</xs:documentation>
 	        </xs:annotation>
 	      </xs:element>
 	  </xs:sequence>
@@ -386,24 +458,13 @@
   </xs:element>
   <xs:element name="taxonomicCoverage">
     <xs:annotation>
-      <xs:documentation>Taxonomic Coverage (e.g. how many and which species are documented) is a container for taxonomic information about a resource. It includes a list of species names (or higher level ranks) from one or more classification systems.
-      </xs:documentation>
+      <xs:documentation>Taxonomic Coverage is a container for taxonomic information about a resource. It includes a list of species names (or higher level ranks) from one or more classification systems.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element name="generalTaxonomicCoverage" type="NonEmptyStringType" minOccurs="0">
           <xs:annotation>
             <xs:documentation>A general description of the range of taxa addressed in the data set or collection</xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        <xs:element name="measurementUnit" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>Taxonomic entity for which species distribution and abundance data are sampled.</xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        <xs:element name="uncertainty" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>Identification and observation uncertainty, ambiguous scientific names, synonyms, differences in taxon concepts, etc.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="taxonomicClassification" maxOccurs="unbounded">
