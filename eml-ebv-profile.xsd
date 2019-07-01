@@ -41,7 +41,7 @@
         <xs:element ref="intellectualRights" minOccurs="0"/>
         <xs:element ref="distribution" minOccurs="0"/>
         <xs:element ref="coverage" minOccurs="0"/>
-        <xs:element name="layers" minOccurs="0"> 
+        <xs:element name="layers" minOccurs="0">
 	      <xs:complexType>
             <xs:sequence>
               <xs:element name="layer" type="layer" minOccurs="0" maxOccurs="unbounded"/>
@@ -222,7 +222,7 @@
 		    <xs:sequence>
 		    	<xs:element name="resolution" type="xs:string">
 			        <xs:annotation>
-			          <xs:documentation>e.g. Species, genus, higher taxonomic level, etc. </xs:documentation>
+			          <xs:documentation>e.g. Species, genus, higher taxonomic level, etc.</xs:documentation>
 			        </xs:annotation>
 			      </xs:element>
 			    <xs:element name="measurementUnit" type="xs:string">
@@ -394,16 +394,6 @@
                   <xs:documentation>The southBoundingCoordinate field defines the latitude of the southern-most point of the bounding box that is being described.</xs:documentation>
                 </xs:annotation>
               </xs:element>
-              <xs:element name="resolution" type="xs:string">
-                <xs:annotation>
-                  <xs:documentation>geographicResolution</xs:documentation>
-                </xs:annotation>
-              </xs:element>
-              <xs:element name="uncertainty" type="xs:string">
-		        <xs:annotation>
-		          <xs:documentation>geographicUncertainty</xs:documentation>
-		        </xs:annotation>
-		      </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -443,16 +433,6 @@
           </xs:annotation>
         </xs:element>
       </xs:choice>
-      <xs:element name="resolution" type="xs:string">
-	        <xs:annotation>
-	          <xs:documentation>temporalResolution</xs:documentation>
-	        </xs:annotation>
-	      </xs:element>
-	      <xs:element name="uncertainty" type="xs:string">
-	        <xs:annotation>
-	          <xs:documentation>temporalUncertainty</xs:documentation>
-	        </xs:annotation>
-	      </xs:element>
 	  </xs:sequence>
     </xs:complexType>
   </xs:element>
