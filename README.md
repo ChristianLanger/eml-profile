@@ -1,6 +1,6 @@
 # EBV EML profile
 
-First draft of the EBV Metadata Profile XML schema.
+First draft of the EBV Metadata Profile XSD schema.
 
 [![DOI](https://zenodo.org/badge/190021681.svg)](https://zenodo.org/badge/latestdoi/190021681)
 
