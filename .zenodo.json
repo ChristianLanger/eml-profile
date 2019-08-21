@@ -1,29 +1,7 @@
 {
-    "description": "<p>First draft of the EBV Metadata Profile XSD schema.</p>", 
-    "license": "other-open", 
+    "language": "eng", 
+    "license": "CC-BY-4.0", 
     "title": "ChristianLanger/eml-profile: EBV-EML-Schema", 
-    "version": "v0.5", 
-    "upload_type": "software", 
-    "publication_date": "2019-08-07", 
-    "creators": [
-        {
-            "affiliation": "Martin Luther University Halle-Wittenberg", 
-            "name": "Christian Langer"
-        }, 
-        {
-            "affiliation": "Friedrich Schiller University Jena", 
-            "name": "Martin Hohmuth"
-        }, 
-        {
-            "affiliation": "GBIF", 
-            "name": "Markus D\u00f6ring"
-        }, 
-        {
-            "affiliation": "@gbif", 
-            "name": "GBIF Jenkins Bot"
-        }
-    ], 
-    "access_right": "open", 
     "related_identifiers": [
         {
             "scheme": "url", 
@@ -35,5 +13,49 @@
             "identifier": "10.5281/zenodo.3362350", 
             "relation": "isVersionOf"
         }
-    ]
+    ], 
+    "version": "v0.5", 
+    "references": [
+        "https://github.com/gbif/eml-profile"
+    ], 
+    "upload_type": "software", 
+    "keywords": [
+        "Essential Biodiversity Variables", 
+        "EBV", 
+        "GEO BON", 
+        "iDiv", 
+        "Metadata Profile", 
+        "GBIF"
+    ], 
+    "publication_date": "2019-08-07", 
+    "creators": [
+        {
+            "orcid": "0000-0003-1446-3527", 
+            "affiliation": "Martin-Luther-University Halle-Wittenberg", 
+            "name": "Christian Langer"
+        }, 
+        {
+            "orcid": "0000-0001-7492-3631", 
+            "affiliation": "Friedrich Schiller University Jena", 
+            "name": "Martin Hohmuth"
+        }, 
+        {
+            "affiliation": "University of California, Berkeley", 
+            "name": "John Wieczorek"
+        }, 
+        {
+            "affiliation": "Florida Museum of Natural History", 
+            "name": "Robert Guralnick"
+        }, 
+        {
+            "affiliation": "Martin-Luther-University Halle-Wittenberg", 
+            "name": "N\u00e9stor Fern\u00e1ndez"
+        }, 
+        {
+            "affiliation": "GBIF", 
+            "name": "Markus D\u00f6ring"
+        }
+    ], 
+    "access_right": "open", 
+    "description": "<p>First draft of the EBV Metadata Profile XSD schema.</p>"
 }
