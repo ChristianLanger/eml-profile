@@ -10,4 +10,4 @@ PDF generated version of eml-ebv-profile.html (Status: 06/07/2019): [eml-ebv-pro
 
 ### Cite as
 
-Christian Langer, Martin Hohmuth, John Wieczorek, Robert Guralnick, & Markus Döring. (2019, August 7). ChristianLanger/eml-profile: EBV-EML-Schema (Version v0.5). Zenodo. [http://doi.org/10.5281/zenodo.3362351](http://doi.org/10.5281/zenodo.3362351)
+Christian Langer, Martin Hohmuth, John Wieczorek, Robert Guralnick, Néstor Fernández, & Markus Döring. (2019, August 7). ChristianLanger/eml-profile: EBV-EML-Schema (Version v0.5). Zenodo.  [http://doi.org/10.5281/zenodo.3362351](http://doi.org/10.5281/zenodo.3362351)
