@@ -698,17 +698,66 @@
   });
   </script>
 
+<style>
+    table {
+        border: 1px solid #eaeaea;
+        width:100%;
+        text-align: left;
+    }
+    .bg-color-row{
+        background-color: #f9f9f9;
+    }
+    table th {
+        width:200px;
+        padding:10px
+    }
+    table td{
+        width:600px;
+        padding:10px;
+
+    }
+</style>
+
 </head>
 
 <body>
 
 <div class="container">
-	<h1>EBV EML profile schema</h1>
-    <h3>First draft of the EBV Metadata Standard.</h3>
-
-    <p>Sourcecode: <a href="https://github.com/ChristianLanger/eml-profile" target="_blank">https://github.com/ChristianLanger/eml-profile</a></p>
-
-    <hr>
+	<h1>EBV Metadata EML Profile</h1>
+        <table>
+        <tr>
+            <th>Name</th>
+            <td>EBV Metadata EML Profile</td>
+        </tr>
+        <tr class="bg-color-row">
+            <th>DOI</th>
+            <td><a href="https://doi.org/10.5281/zenodo.3362351" target="_blank">https://doi.org/10.5281/zenodo.3362351</a></td>
+        </tr>
+        <tr>
+            <th>License</th>
+            <td><a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank">Creative Commons Attribution 4.0 International</a></td>
+        </tr>
+        <tr class="bg-color-row">
+            <th>Citation</th>
+            <td>Christian Langer, Martin Hohmuth, John Wieczorek, Robert Guralnick, Néstor Fernández, & Markus Döring. (2019, August 7). ChristianLanger/eml-profile: EBV-EML-Schema (Version v0.5). Zenodo. <a href="https://doi.org/10.5281/zenodo.3362351" target="_blank">https://doi.org/10.5281/zenodo.3362351</a></td>
+        </tr>
+        <tr>
+            <th>Github</th>
+            <td><a href="https://github.com/ChristianLanger/eml-profile" target="_blank">https://github.com/ChristianLanger/eml-profile</a></td>
+        </tr>
+        <tr class="bg-color-row">
+            <th>Contributers</th>
+            <td>Christian Langer (iDiv), Martin Hohmuth (iDiv), John Wieczorek (UC Berkeley), Robert Guralnick (UF), Néstor Fernández (iDiv), Markus Döring (GBIF)</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td><p>Version v0.5 of the EBV Metadata EML Profile</p>
+                <p>Version v0.5 is focused on species-level EBVs, especially on the species populations EBV class, and maybe equally applicable to the species traits EBV class.</p>
+                <p>However, this version doesn´t cover other EBV classes related to ecosystem function/structure or community composition and genetic composition. These classes will need some additional terms as well as have no need for some current terms (e.g. taxonomic coverage). For instance, ecosystem function and ecosystem structure EBVs will need some other dimension than taxonomy, e.g. fields related to what type of ecosystems and habitats are captured.</p>
+                <p>This HTML file was automatically generated from the XSD file. For a detailed description of the individual classes and properties, please refer to the source code of the XSD profile schema (<a href="https://github.com/ChristianLanger/eml-profile/blob/master/eml-ebv-profile.xsd" target="_blank">eml-ebv-profile.xsd</a>).</p>
+            </td>
+        </tr>
+    </table>
     
         <section>
             <fieldset data-xsd2html2xml-namespace="" data-xsd2html2xml-type="element" data-xsd2html2xml-name="dataset" data-xsd2html2xml-xpath="/dataset" style="background-color:#f3f3f3">
